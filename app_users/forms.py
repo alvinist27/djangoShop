@@ -16,7 +16,7 @@ class RegistrationForm(UserCreationForm):
     email = forms.EmailField(label='Email адрес', required=True)
     password1 = forms.CharField(widget=forms.PasswordInput, min_length=8, label='Введите пароль')
     password2 = forms.CharField(widget=forms.PasswordInput, min_length=8, label='Повторите пароль')
-    captcha = CaptchaField()
+    captcha = CaptchaField(label='Captcha')
 
     class Meta:
         model = User
