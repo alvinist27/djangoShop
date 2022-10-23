@@ -1,10 +1,7 @@
 from django.contrib.auth import authenticate, login
 from django.shortcuts import render, redirect
-from app_users.forms import RegistrationForm, AuthForm, UpdateUserForm
+from app_users.forms import RegistrationForm, AuthForm
 from django.views import View
-from django.contrib.auth.views import LoginView, LogoutView
-from django.contrib.auth.decorators import login_required
-from django.utils.decorators import method_decorator
 
 
 class RegistrationView(View):
@@ -15,33 +12,24 @@ class RegistrationView(View):
     def post(self, request):
         form = RegistrationForm(request.POST)
         if form.is_valid():
-            form.save()
-            email = form.cleaned_data.get('email')
-            password = form.cleaned_data.get('password1')
-            user = authenticate(email=email, password=password)
+            user = form.save()
             login(request, user)
             return redirect('/')
         return render(request, 'app_users/register.html', {'form': form})
 
 
-class AuthView(LoginView):
-    template_name = 'app_users/login.html'
-    form_class = AuthForm
-
-
-@method_decorator(login_required, name='dispatch')
-class LogoutUserView(LogoutView):
-    next_page = '/'
-
-
-@method_decorator(login_required, name='dispatch')
-class UpdateUserView(View):
+class AuthView(View):
     def get(self, request):
-        form = UpdateUserForm(instance=request.user)
-        return render(request, 'app_users/profile.html', {'form': form})
+        form = AuthForm()
+        return render(request, 'app_users/login.html', {'form': form})
 
     def post(self, request):
-        form = UpdateUserForm(request.POST, instance=request.user)
+        form = AuthForm(request.POST)
         if form.is_valid():
-            form.save()
-        return render(request, 'app_users/profile.html', {'form': form})
+            email = form.cleaned_data['email']
+            password = form.cleaned_data['password']
+            user = authenticate(email=email, password=password)
+            if user:
+                login(request, user)
+                return redirect('/')
+        return render(request, 'app_users/login.html', {'form': form})

@@ -1,4 +1,5 @@
 from django.contrib.auth.base_user import AbstractBaseUser
+from django.contrib.auth.models import UserManager
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 
@@ -15,10 +16,11 @@ class User(AbstractBaseUser):
     name = models.CharField(max_length=40, verbose_name='Имя')
     surname = models.CharField(max_length=50, verbose_name='Фамилия')
     birth_date = models.DateField(null=True, verbose_name='Дата рождения')
-    email = models.EmailField(max_length=50, verbose_name='Электронный адрес')
+    email = models.EmailField(max_length=50, unique=True, verbose_name='Электронный адрес')
     access = models.ForeignKey(
         RightAccess, on_delete=models.DO_NOTHING, related_name='user', verbose_name='Права', default=3,
     )
+    objects = UserManager()
 
     USERNAME_FIELD = 'email'
 

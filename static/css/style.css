@@ -228,6 +228,13 @@ img:hover {
     margin-left: 0px;
 }
 
+.captcha {
+    width: 10%;
+    height: 10%;
+    margin-right: 0px;
+    margin-left: 0px;
+}
+
 #col1 {
 	flex: 1;
 	height: 30%;

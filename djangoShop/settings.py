@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'app_shop',
     'app_users',
     'crispy_forms',
+    'captcha',
 ]
 
 MIDDLEWARE = [
@@ -140,3 +141,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+LOGIN_REDIRECT_URL = '/'
+
+AUTH_USER_MODEL = 'app_shop.User'
