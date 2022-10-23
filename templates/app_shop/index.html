@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    <div id="main_index">
+        <h2>Выберите интересующий вас раздел</h2>
+        <div class="container">
+            <div class="row justify-content-md-center">
+                <div class="col-sm">
+                    <a href="{% url 'men' %}">
+                        <img src={% static "img/main_photos/1.jpg" %}>
+                        <p class="type">Мужская одежда</p>
+                    </a>
+                </div>
+                <div class="col-sm">
+                    <a href="{% url 'women' %}">
+                        <img src={% static "img/main_photos/2.jpg" %}>
+                        <p class="type">Женская одежда</p>
+                    </a>
+                </div>
+                <div class="col-sm">
+                    <a href="{% url 'child' %}">
+                        <img src={% static "img/main_photos/3.jpg" %}>
+                        <p class="type">Детская одежда</p>
+                    </a>
+                </div>
+            </div>
+        </div><br>
+    </div>
+{% endblock %}

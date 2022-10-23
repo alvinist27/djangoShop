@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    <title>Заказ сделан</title>
+{% endblock %}
+
+{% block content %}
+    <div id="main">
+        <h2>Ваш заказ сделан, спасибо</h2>
+        <p id="center_text">Номер вашего заказа <strong>{{ order.id }}</strong>.<br>
+           Информация по заказу будет передана по адресу электронной почты</p>
+    </div>
+{% endblock %}

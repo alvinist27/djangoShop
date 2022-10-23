@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load mathfilters %}
+{% load crispy_forms_tags %}
+
+{% block title %}<title>.shop - Магазин одежды</title>
+{% endblock %}
+{% block content %}
+        <div class="new_container">
+            <div id="col1">
+                <img src="/{{ item.images.first.images }}" alt="Photo">
+            </div>
+            <div id="col2">
+                <h2>{{ item.title }}</h2>
+
+                <p>{{ item.description }}</p>
+                <p>Для кого: {{ item.type }}</p>
+                <p>Тип: {{ item.group }}</p>
+                <p>Размеры: {{ item.size }}</p>
+                <p>Оценка: {{ rating }}</p>
+
+                {% if item.discount > 0 %}
+                    <h4 id="new_discount">{{ item.price }} ₽</h4>
+                    <h4 id="new_cost">{{ item.price|sub:item.discount }} ₽</h4>
+                {% else %}
+                    <h4 id="new_cost">{{ item.price }} ₽</h4>
+                {% endif %}
+
+                <div class="cart col-4">
+                    <form action="{% url "cart_add" item.id %}" method="post">
+                        {% csrf_token %}
+                        {{ form|crispy }}<br>
+                        <button type="submit" class="btn">В корзину</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="reviews">
+            <div class="row justify-content-md-center">
+                <div class="col-6">
+                    {% if review.errors %}
+                        {% for field in review %}
+                            {% for error in field.errors %}
+                                <div class="alert alert-danger">
+                                    <strong>{{ error|escape }}</strong>
+                                </div>
+                            {% endfor %}
+                        {% endfor %}
+                        {% for error in review.non_field_errors %}
+                            <div class="alert alert-danger">
+                                <strong>{{ error|escape }}</strong>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+
+                    {% if user.is_authenticated %}
+                        <h3>Добавьте отзыв:</h3>
+                        <form method="post">
+                            {% csrf_token %}
+                            {{ review.review_text|as_crispy_field }}<br>
+                            {{ review.rating|as_crispy_field }}<br>
+                            <button type="submit" class="btn">Отправить</button>
+                        </form>
+                    {% endif %}
+
+                    {% if review_list|length %}
+                        <h3>Отзывы:</h3>
+                        {% for review in review_list %}
+                            <div class="container">
+                                <p>{{ review.username }} {{ review.rating }}/5</p>
+                                <p>{{ review.review_text }}</p>
+                                <p>{{ review.created }}</p>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+        </div><br>
+    </div>
+{% endblock %}

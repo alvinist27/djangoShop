@@ -16,7 +16,9 @@ class User(AbstractBaseUser):
     surname = models.CharField(max_length=50, verbose_name='Фамилия')
     birth_date = models.DateField(null=True, verbose_name='Дата рождения')
     email = models.EmailField(max_length=50, verbose_name='Электронный адрес')
-    access = models.ForeignKey(RightAccess, on_delete=models.DO_NOTHING, related_name='user', verbose_name='Права')
+    access = models.ForeignKey(
+        RightAccess, on_delete=models.DO_NOTHING, related_name='user', verbose_name='Права', default=3,
+    )
 
     USERNAME_FIELD = 'email'
 
