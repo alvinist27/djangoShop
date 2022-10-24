@@ -217,10 +217,6 @@ img:hover {
     padding: 10px;
 }
 
-.container span {
-    color: white;
-}
-
 .container img, .new_container img {
     width: 98%;
     height: 98%;

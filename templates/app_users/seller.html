@@ -5,7 +5,7 @@
 
 {% block content %}
     <div id="main">
-        <h2>Введите данные для регистрации</h2>
+        <h2>Введите данные продавца</h2>
         <div class="container">
             <div class="row justify-content-md-center">
                 <div class="col-5">
@@ -25,14 +25,15 @@
                     {% endif %}
                     <form method="post">
                         {% csrf_token %}
-                        {{ form.group |as_crispy_field }}<br>
-                        {{ form.name |as_crispy_field }}<br>
-                        {{ form.surname |as_crispy_field }}<br>
+                        {{ form.type |as_crispy_field }}<br>
+                        {{ form.INN |as_crispy_field }}<br>
+                        {{ form.reg_date |as_crispy_field }}<br>
+                        {{ form.legal_name|as_crispy_field }}<br>
                         {{ form.email|as_crispy_field }}<br>
-                        {{ form.birth_date|as_crispy_field }}<br>
-                        {{ form.password1|as_crispy_field }}<br>
-                        {{ form.password2|as_crispy_field }}<br>
-                        {{ form.captcha|as_crispy_field }}<br>
+                        {{ form.index|as_crispy_field }}<br>
+                        {{ form.city|as_crispy_field }}<br>
+                        {{ form.street|as_crispy_field }}<br>
+                        {{ form.house_number|as_crispy_field }}<br>
                         <div id="sub">
                             <button type="submit" class="btn">
                                 Регистрация

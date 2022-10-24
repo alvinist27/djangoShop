@@ -9,7 +9,7 @@ class Address(models.Model):
     city = models.CharField(max_length=50, verbose_name='Город')
     street = models.CharField(max_length=70, verbose_name='Улица')
     house_number = models.CharField(max_length=10, verbose_name='Дом')
-    apartment_number = models.IntegerField(verbose_name='Номер квартиры')
+    apartment_number = models.IntegerField(null=True, verbose_name='Номер квартиры')
 
     class Meta:
         verbose_name = 'Адрес'
@@ -46,6 +46,7 @@ class SellerData(models.Model):
     type = models.CharField(max_length=10, verbose_name='Название категории')
     INN = models.IntegerField(verbose_name='ИНН')
     reg_date = models.DateField(verbose_name='Дата регистрации организации')
+    email = models.EmailField(max_length=50, null=True, unique=True, verbose_name='Электронный адрес организации')
     legal_name = models.CharField(max_length=50, verbose_name='Юридическое название')
     legal_address = models.ForeignKey(
         Address, on_delete=models.CASCADE, related_name='seller', verbose_name='Юридический адрес',
