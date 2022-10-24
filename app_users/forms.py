@@ -3,6 +3,11 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from app_shop.models import User
 
+GROUP_CHOICES = (
+    ('1', 'Покупатель'),
+    ('2', 'Продавец'),
+)
+
 
 class AuthForm(forms.Form):
     email = forms.CharField(max_length=50, required=True, label='Email адрес')
@@ -11,6 +16,7 @@ class AuthForm(forms.Form):
 
 
 class RegistrationForm(UserCreationForm):
+    group = forms.ChoiceField(choices=GROUP_CHOICES, required=True, label='Зарегистрироваться как')
     name = forms.CharField(max_length=40, required=True, label='Имя пользователя')
     surname = forms.CharField(max_length=50, required=True, label='Фамилия пользователя')
     email = forms.EmailField(label='Email адрес', required=True)

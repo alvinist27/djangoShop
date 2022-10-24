@@ -25,6 +25,7 @@
                     {% endif %}
                     <form method="post">
                         {% csrf_token %}
+                        {{ form.group |as_crispy_field }}<br>
                         {{ form.name |as_crispy_field }}<br>
                         {{ form.surname |as_crispy_field }}<br>
                         {{ form.email|as_crispy_field }}<br>
