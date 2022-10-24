@@ -4,6 +4,18 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 
 
+class Address(models.Model):
+    index = models.IntegerField(verbose_name='Почтовый индекс')
+    city = models.CharField(max_length=50, verbose_name='Город')
+    street = models.CharField(max_length=70, verbose_name='Улица')
+    house_number = models.CharField(max_length=10, verbose_name='Дом')
+    apartment_number = models.IntegerField(verbose_name='Номер квартиры')
+
+    class Meta:
+        verbose_name = 'Адрес'
+        verbose_name_plural = 'Адреса'
+
+
 class RightAccess(models.Model):
     name = models.CharField(max_length=70, verbose_name='Название категории')
 
@@ -29,6 +41,21 @@ class User(AbstractBaseUser):
         verbose_name_plural = 'Пользователи'
 
 
+class SellerData(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name='Пользователь')
+    type = models.CharField(max_length=10, verbose_name='Название категории')
+    INN = models.IntegerField(verbose_name='ИНН')
+    reg_date = models.DateField(verbose_name='Дата регистрации организации')
+    legal_name = models.CharField(max_length=50, verbose_name='Юридическое название')
+    legal_address = models.ForeignKey(
+        Address, on_delete=models.CASCADE, related_name='seller', verbose_name='Юридический адрес',
+    )
+
+    class Meta:
+        verbose_name = 'Данные пользователя'
+        verbose_name_plural = 'Данные пользователей'
+
+
 class Product(models.Model):
     name = models.CharField(max_length=100, verbose_name='Название')
     description = models.CharField(max_length=300, null=True, verbose_name='Описание')
@@ -42,18 +69,6 @@ class Product(models.Model):
     class Meta:
         verbose_name = 'Товар'
         verbose_name_plural = 'Товары'
-
-
-class Address(models.Model):
-    index = models.IntegerField(verbose_name='Почтовый индекс')
-    city = models.CharField(max_length=50, verbose_name='Город')
-    street = models.CharField(max_length=70, verbose_name='Улица')
-    house_number = models.CharField(max_length=10, verbose_name='Дом')
-    apartment_number = models.IntegerField(verbose_name='Номер квартиры')
-
-    class Meta:
-        verbose_name = 'Адрес'
-        verbose_name_plural = 'Адреса'
 
 
 class Order(models.Model):
