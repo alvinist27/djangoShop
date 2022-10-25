@@ -35,15 +35,15 @@ class RegistrationForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ('name', 'surname', 'email', 'password1', 'password2')
+        fields = ('group', 'name', 'surname', 'email', 'birth_date', 'password1', 'password2')
 
 
 class AddSellerForm(forms.Form):
-    type = forms.ChoiceField(choices=ORG_TYPE_CHOICES, required=True, label='Тип организации')
-    INN = forms.IntegerField(label='ИНН', required=True)
+    type = forms.ChoiceField(choices=ORG_TYPE_CHOICES, label='Тип организации')
+    INN = forms.DecimalField(label='ИНН', max_digits=12, decimal_places=0)
     reg_date = forms.DateField(required=False, label='Дата регистрации организации')
     legal_name = forms.CharField(max_length=50, label='Юридическое название')
-    email = forms.EmailField(max_length=50, required=False, label='Электронный адрес организации')
+    email = forms.EmailField(max_length=50, label='Электронный адрес организации')
     index = forms.IntegerField(label='Почтовый индекс')
     city = forms.CharField(max_length=50, label='Город')
     street = forms.CharField(max_length=70, label='Улица')

@@ -1,9 +1,10 @@
 from django.contrib.auth import authenticate, login
-from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
+from django.urls import reverse
+
 from app_users.forms import RegistrationForm, AuthForm, AddSellerForm
 from django.views import View
-from app_shop.models import SellerData, Address
+from app_shop.models import SellerData, Address, RightAccess
 
 
 class RegistrationView(View):
@@ -16,7 +17,9 @@ class RegistrationView(View):
         if form.is_valid():
             user = form.save()
             login(request, user)
-            return redirect('/')
+            if form.cleaned_data['group'] == '1':
+                return redirect('/')
+            return redirect(reverse('seller'))
         return render(request, 'app_users/register.html', {'form': form})
 
 
@@ -62,5 +65,9 @@ class AddSellerView(View):
                 legal_address=address,
             )
             seller.save()
+
+            access = RightAccess.objects.get(name='Продавец')
+            request.user.access = access
+            request.user.save()
 
         return render(request, 'app_users/seller.html', {'form': form})
