@@ -55,16 +55,17 @@ class AddSellerView(View):
                 house_number=form.cleaned_data['house_number'],
             )
 
-            seller = SellerData(
+            SellerData.objects.update_or_create(
                 user=request.user,
-                type=form.cleaned_data['type'],
-                INN=form.cleaned_data['INN'],
-                reg_date=form.cleaned_data['reg_date'],
-                email=form.cleaned_data['email'],
-                legal_name=form.cleaned_data['legal_name'],
-                legal_address=address,
+                defaults={
+                    'type': form.cleaned_data['type'],
+                    'INN': form.cleaned_data['INN'],
+                    'reg_date': form.cleaned_data['reg_date'],
+                    'email': form.cleaned_data['email'],
+                    'legal_name': form.cleaned_data['legal_name'],
+                    'legal_address': address,
+                },
             )
-            seller.save()
 
             access = RightAccess.objects.get(name='Продавец')
             request.user.access = access

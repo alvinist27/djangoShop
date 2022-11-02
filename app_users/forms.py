@@ -27,7 +27,7 @@ class RegistrationForm(UserCreationForm):
     group = forms.ChoiceField(choices=GROUP_CHOICES, label='Зарегистрироваться как')
     name = forms.CharField(max_length=40, label='Имя пользователя')
     surname = forms.CharField(max_length=50, label='Фамилия пользователя')
-    email = forms.EmailField(label='Email адрес', required=True)
+    email = forms.EmailField(label='Email адрес')
     birth_date = forms.DateField(required=False, label='Дата рождения')
     password1 = forms.CharField(widget=forms.PasswordInput, min_length=8, label='Введите пароль')
     password2 = forms.CharField(widget=forms.PasswordInput, min_length=8, label='Повторите пароль')
@@ -41,7 +41,7 @@ class RegistrationForm(UserCreationForm):
 class AddSellerForm(forms.Form):
     type = forms.ChoiceField(choices=ORG_TYPE_CHOICES, label='Тип организации')
     INN = forms.DecimalField(label='ИНН', max_digits=12, decimal_places=0)
-    reg_date = forms.DateField(required=False, label='Дата регистрации организации')
+    reg_date = forms.DateField(label='Дата регистрации организации')
     legal_name = forms.CharField(max_length=50, label='Юридическое название')
     email = forms.EmailField(max_length=50, label='Электронный адрес организации')
     index = forms.IntegerField(label='Почтовый индекс')
