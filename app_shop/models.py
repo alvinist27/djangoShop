@@ -43,7 +43,7 @@ class User(AbstractBaseUser):
 
 class SellerData(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name='Пользователь')
-    type = models.CharField(max_length=10, verbose_name='Название категории')
+    type = models.CharField(max_length=5, verbose_name='Название категории')
     INN = models.IntegerField(verbose_name='ИНН')
     reg_date = models.DateField(verbose_name='Дата регистрации организации')
     email = models.EmailField(max_length=50, unique=True, verbose_name='Электронный адрес организации')

@@ -17,7 +17,7 @@ class RegistrationView(View):
         if form.is_valid():
             user = form.save()
             login(request, user)
-            if form.cleaned_data['group'] == '1':
+            if form.cleaned_data['group'] == 'Покупатель':
                 return redirect('/')
             return redirect(reverse('seller'))
         return render(request, 'app_users/register.html', {'form': form})
