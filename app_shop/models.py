@@ -1,4 +1,5 @@
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
+from django.contrib.auth.models import PermissionsMixin
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from django.utils.translation import gettext_lazy as _
@@ -46,7 +47,7 @@ class CustomUserManager(BaseUserManager):
         return self.create_user(email, password, **extra_fields)
 
 
-class User(AbstractBaseUser):
+class User(AbstractBaseUser, PermissionsMixin):
     name = models.CharField(max_length=40, verbose_name='Имя')
     surname = models.CharField(max_length=50, verbose_name='Фамилия')
     birth_date = models.DateField(null=True, verbose_name='Дата рождения')
@@ -57,6 +58,12 @@ class User(AbstractBaseUser):
     objects = CustomUserManager()
 
     USERNAME_FIELD = 'email'
+
+    @property
+    def is_staff(self):
+        if self.access.id >= 5:
+            return True
+        return False
 
     class Meta:
         verbose_name = 'Пользователь'
@@ -83,7 +90,7 @@ class Product(models.Model):
     name = models.CharField(max_length=100, verbose_name='Название')
     description = models.CharField(max_length=300, null=True, verbose_name='Описание')
     type = models.CharField(max_length=15, verbose_name='Тип одежды')
-    category = models.CharField(max_length=50, verbose_name='Тип одежды')
+    category = models.CharField(max_length=50, verbose_name='Категория')
     purchase_price = models.FloatField(verbose_name='Цена закупки')
     size = models.CharField(max_length=3, verbose_name='Размер')
     selling_price = models.FloatField(verbose_name='Цена продажи')
