@@ -1,7 +1,7 @@
-from django.contrib.auth.base_user import AbstractBaseUser
-from django.contrib.auth.models import UserManager
+from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 
 
 class Address(models.Model):
@@ -24,6 +24,28 @@ class RightAccess(models.Model):
         verbose_name_plural = 'Права доступа'
 
 
+class CustomUserManager(BaseUserManager):
+    """Custom user model manager where email is the unique auth identifier"""
+
+    def create_user(self, email, password, **extra_fields):
+        """Create and save a User with the given email and password."""
+        if not email:
+            raise ValueError(_('The Email must be set'))
+        email = self.normalize_email(email)
+        user = self.model(email=email, **extra_fields)
+        user.set_password(password)
+        user.save()
+        return user
+
+    def create_superuser(self, email, password, **extra_fields):
+        """Create and save a SuperUser with the given email and password."""
+        admin_access_id = 5
+        extra_fields.setdefault('access_id', admin_access_id)
+        if extra_fields.get('access_id') != admin_access_id:
+            raise ValueError(_('Superuser must admin access right.'))
+        return self.create_user(email, password, **extra_fields)
+
+
 class User(AbstractBaseUser):
     name = models.CharField(max_length=40, verbose_name='Имя')
     surname = models.CharField(max_length=50, verbose_name='Фамилия')
@@ -32,7 +54,7 @@ class User(AbstractBaseUser):
     access = models.ForeignKey(
         RightAccess, on_delete=models.DO_NOTHING, related_name='user', verbose_name='Права', default=3,
     )
-    objects = UserManager()
+    objects = CustomUserManager()
 
     USERNAME_FIELD = 'email'
 
@@ -117,4 +139,3 @@ class Photo(models.Model):
     class Meta:
         verbose_name = 'Фото'
         verbose_name_plural = 'Фотографии'
-
