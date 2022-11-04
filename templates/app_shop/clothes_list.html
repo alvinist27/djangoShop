@@ -22,29 +22,23 @@
 
             {% if clothes|length %}
             {% for cloth in clothes %}
-                {% if cloth.is_available %}
+                {% if cloth.quantity %}
                 <div class="product-wrapper">
                     <div class="product">
                         <a href="{{ cloth.id }}">
                             <div class="product-photo">
-                                <img src="/{{ cloth.images.first.images }}">
+                                <img src="/media/{{ cloth.images.first.file_path }}" alt="clothes image">
                             </div>
                         </a>
                         <div class="product-text">
-                            <a href="{{ cloth.id }}">
-                                <h4 id="title" class="cut">{{ cloth.title }}</h4>
-                            </a>
-                            {% if cloth.discount > 0 %}
-                                <h4><span id="discount">{{ cloth.price }} ₽</span> <span id="cost_calc">
-                                    {{ cloth.price|sub:cloth.discount }} ₽</span> </h4>
-                            {% else %}
-                                <h4 id="cost">{{ cloth.price }} ₽</h4>
-                            {% endif %}
-
-                            <form action="{% url "cart_add" cloth.id %}" method="post">
-                                {% csrf_token %}
-                                <button type="submit" class="btn cart"><img src="{% static "/img/icon.png" %}"></button>
-                            </form>
+                            <a href="{{ cloth.id }}"><h4 id="name" class="cut">{{ cloth.name }}</h4></a>
+                            <h4 id="cost">{{ cloth.selling_price }} ₽</h4>
+{#                            <form action="{% url "cart_add" cloth.id %}" method="post">#}
+{#                                {% csrf_token %}#}
+{#                                <button type="submit" class="btn cart">#}
+{#                                    <img src="{% static "/img/icon.png" %}" alt="add to cart">#}
+{#                                </button>#}
+{#                            </form>#}
                         </div>
                     </div>
                 </div>
