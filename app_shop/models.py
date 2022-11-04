@@ -4,6 +4,8 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+from app_shop.choices import PRODUCT_CATEGORY_CHOICES, PRODUCT_SIZE_CHOICES, PRODUCT_TYPE_CHOICES
+
 
 class Address(models.Model):
     index = models.IntegerField(verbose_name='Почтовый индекс')
@@ -15,6 +17,12 @@ class Address(models.Model):
     class Meta:
         verbose_name = 'Адрес'
         verbose_name_plural = 'Адреса'
+
+    def __str__(self):
+        address = f'{self.city}, {self.street}, {self.house_number}'
+        if self.apartment_number:
+            address += f', {self.apartment_number}'
+        return address
 
 
 class RightAccess(models.Model):
@@ -89,10 +97,10 @@ class SellerData(models.Model):
 class Product(models.Model):
     name = models.CharField(max_length=100, verbose_name='Название')
     description = models.CharField(max_length=300, null=True, verbose_name='Описание')
-    type = models.CharField(max_length=15, verbose_name='Тип одежды')
-    category = models.CharField(max_length=50, verbose_name='Категория')
+    type = models.CharField(max_length=15, verbose_name='Тип одежды', choices=PRODUCT_TYPE_CHOICES)
+    category = models.CharField(max_length=50, verbose_name='Категория', choices=PRODUCT_CATEGORY_CHOICES)
     purchase_price = models.FloatField(verbose_name='Цена закупки')
-    size = models.CharField(max_length=3, verbose_name='Размер')
+    size = models.CharField(max_length=3, verbose_name='Размер', choices=PRODUCT_SIZE_CHOICES)
     selling_price = models.FloatField(verbose_name='Цена продажи')
     quantity = models.IntegerField(verbose_name='Количество на складе')
 
