@@ -44,3 +44,8 @@ def clothes_women_view(request):
 
 def clothes_child_view(request):
     return clothes_base_view(request, 'Детская')
+
+
+def clothes_view(request, id):
+    item = Product.objects.filter(id=id).first()
+    return render(request, 'app_shop/clothes.html', {'item': item})
