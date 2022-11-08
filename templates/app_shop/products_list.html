@@ -25,13 +25,13 @@
                 {% if cloth.quantity %}
                 <div class="product-wrapper">
                     <div class="product">
-                        <a href="{{ cloth.id }}">
+                        <a href="{% url 'product' cloth.id %}">
                             <div class="product-photo">
                                 <img src="/media/{{ cloth.images.first.file_path }}" alt="clothes image">
                             </div>
                         </a>
                         <div class="product-text">
-                            <a href="{{ cloth.id }}"><h4 id="name" class="cut">{{ cloth.name }}</h4></a>
+                            <a href="{% url 'product' cloth.id %}"><h4 id="name" class="cut">{{ cloth.name }}</h4></a>
                             <h4 id="cost">{{ cloth.selling_price }} ₽</h4>
                         </div>
                     </div>

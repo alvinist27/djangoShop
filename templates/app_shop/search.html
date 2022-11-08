@@ -20,13 +20,13 @@
                 {% if cloth.is_available %}
                 <div class="product-wrapper">
                     <div class="product">
-                        <a href="../clothes/{{ cloth.id }}">
+                        <a href="{% url 'product' cloth.id %}">
                             <div class="product-photo">
                                 <img src="/{{ cloth.images.first.images }}">
                             </div>
                         </a>
                         <div class="product-text">
-                            <a href="../clothes/{{ cloth.id }}">
+                            <a href="{% url 'product' cloth.id %}">
                                 <h4 id="title" class="cut">{{ cloth.title }}</h4>
                             </a>
                             {% if cloth.discount > 0 %}
