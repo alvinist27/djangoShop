@@ -11,41 +11,41 @@ class MainView(View):
         return render(request, 'app_shop/index.html')
 
 
-def get_clothes_list(form_select, cloth_type):
+def get_products_list(form_select, product_type):
     if form_select != 'Все товары':
-        return Product.objects.filter(Q(type=cloth_type) & Q(category=form_select))[::-1]
-    return Product.objects.filter(type=cloth_type)[::-1]
+        return Product.objects.filter(Q(type=product_type) & Q(category=form_select))[::-1]
+    return Product.objects.filter(type=product_type)[::-1]
 
 
-def clothes_base_view(request, cloth_type):
+def product_list_base_view(request, product_type):
     if request.method == 'POST':
         form = ProductCategoryForm(request.POST)
         if form.is_valid():
             select = form.cleaned_data.get('select')
-            clothes = get_clothes_list(select, cloth_type)
+            products = get_products_list(select, product_type)
     else:
         form = ProductCategoryForm()
-        clothes = Product.objects.filter(type=cloth_type)[::-1]
-    paginator = Paginator(clothes, 12)
+        products = Product.objects.filter(type=product_type)[::-1]
+    paginator = Paginator(products, 12)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     return render(
-        request, 'app_shop/clothes_list.html', {'name': f'{cloth_type} одежда', 'clothes': page_obj, 'form': form},
+        request, 'app_shop/products_list.html', {'name': f'{product_type} одежда', 'clothes': page_obj, 'form': form},
     )
 
 
-def clothes_men_view(request):
-    return clothes_base_view(request, 'Мужская')
+def men_products_list_view(request):
+    return product_list_base_view(request, 'Мужская')
 
 
-def clothes_women_view(request):
-    return clothes_base_view(request, 'Женская')
+def women_products_list_view(request):
+    return product_list_base_view(request, 'Женская')
 
 
-def clothes_child_view(request):
-    return clothes_base_view(request, 'Детская')
+def child_products_list_view(request):
+    return product_list_base_view(request, 'Детская')
 
 
-def clothes_view(request, id):
-    item = Product.objects.filter(id=id).first()
-    return render(request, 'app_shop/clothes.html', {'item': item})
+def product_view(request, id):
+    product = Product.objects.filter(id=id).first()
+    return render(request, 'app_shop/product.html', {'item': product})

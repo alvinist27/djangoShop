@@ -61,7 +61,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     birth_date = models.DateField(null=True, verbose_name='Дата рождения')
     email = models.EmailField(max_length=50, unique=True, verbose_name='Электронный адрес')
     access = models.ForeignKey(
-        RightAccess, on_delete=models.DO_NOTHING, related_name='user', verbose_name='Права', default=3,
+        RightAccess, on_delete=models.DO_NOTHING, related_name='access', verbose_name='Права', default=3,
     )
     objects = CustomUserManager()
 
@@ -126,7 +126,7 @@ class Order(models.Model):
 
 class Comment(models.Model):
     user = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='user', verbose_name='Пользователь')
-    product = models.ForeignKey(Product, on_delete=models.DO_NOTHING, related_name='cloth', verbose_name='Товар')
+    product = models.ForeignKey(Product, on_delete=models.DO_NOTHING, related_name='product', verbose_name='Товар')
     text = models.TextField(max_length=300, null=True, verbose_name='Текст отзыва')
     user_rating = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)], verbose_name='Оценка')
     created = models.DateTimeField(auto_now_add=True, verbose_name='Создан')
@@ -137,12 +137,11 @@ class Comment(models.Model):
 
 
 class ProductOrder(models.Model):
-    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='clothes', verbose_name='Заказ')
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='order_items', verbose_name='Товар')
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='cloth_order', verbose_name='Заказ')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='cloth_product', verbose_name='Товар')
     quantity = models.PositiveIntegerField(default=1, verbose_name='Количество')
 
     class Meta:
-        db_table = 'app_version'
         constraints = [
             models.UniqueConstraint(fields=['order', 'product'], name='product_in_order'),
         ]

@@ -8,7 +8,7 @@ class PhotoInline(admin.TabularInline):
     model = Photo
 
 
-class OrderClothInline(admin.TabularInline):
+class OrderProductInline(admin.TabularInline):
     fk_name = 'order'
     model = ProductOrder
 
@@ -21,7 +21,7 @@ class ProductAdmin(admin.ModelAdmin):
 
 
 class OrderAdmin(admin.ModelAdmin):
-    inlines = [OrderClothInline]
+    inlines = [OrderProductInline]
     list_filter = ['status']
     list_display = ['created', 'status']
 

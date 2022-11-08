@@ -1,12 +1,12 @@
 from django.urls import path
 
-from app_shop.views import MainView, clothes_men_view, clothes_women_view, clothes_child_view, clothes_view
+from app_shop.views import MainView, men_products_list_view, women_products_list_view, child_products_list_view, product_view
 
 
 urlpatterns = [
     path('', MainView.as_view(), name='main'),
-    path('clothes/men', clothes_men_view, name='men'),
-    path('clothes/women', clothes_women_view, name='women'),
-    path('clothes/child', clothes_child_view, name='child'),
-    path('clothes/<int:id>', clothes_view, name='clothes'),
+    path('products/men', men_products_list_view, name='men'),
+    path('products/women', women_products_list_view, name='women'),
+    path('products/child', child_products_list_view, name='child'),
+    path('product/<int:id>', product_view, name='product'),
 ]
