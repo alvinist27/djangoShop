@@ -399,3 +399,7 @@ button img{
     clear: both;
     display: table;
 }
+
+#product_text {
+	margin: 15px;
+}

@@ -1,42 +1,47 @@
 {% extends 'base.html' %}
 {% load crispy_forms_filters %}
 {% load static %}
-{% load mathfilters %}
-{% load crispy_forms_tags %}
 
-{% block title %}<title>.shop - Магазин одежды</title>
-{% endblock %}
+{% block title %}<title>Каталог товаров</title>{% endblock %}
 {% block content %}
         <div class="container">
             <div class="row justify-content-md-center">
-                <div class="col-sm-9">
-
-                <div class="new_container">
-                    <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
-                        <div class="carousel-inner">
-                        {% for file in item.images.all %}
-                            <div class="carousel-item {% if forloop.counter == 1 %}active{% endif %}">
-                                <img class="d-block w-100" src="/media/{{ file.file_path }}" alt="slides">
+                <div class="col-sm-12">
+                    <div class="new_container">
+                        <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
+                            <div class="carousel-inner">
+                            {% for file in item.images.all %}
+                                <div class="carousel-item {% if forloop.counter == 1 %}active{% endif %}">
+                                    <img class="d-block w-100" src="/media/{{ file.file_path }}" alt="slides">
+                                </div>
+                            {% endfor %}
                             </div>
-                        {% endfor %}
+                            <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="sr-only">Previous</span>
+                            </a>
+                            <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="sr-only">Next</span>
+                            </a>
                         </div>
-                        <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
-                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                            <span class="sr-only">Previous</span>
-                        </a>
-                        <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
-                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                            <span class="sr-only">Next</span>
-                        </a>
-                    </div>
 
-                    <div id="col2">
-                        <h2>{{ item.name }}</h2>
-                        <p>{{ item.description }}</p>
-                        <p>Для кого: {{ item.type }}</p>
-                        <p>Тип: {{ item.category }}</p>
-                        <p>Размер: {{ item.size }}</p>
-                        <p><b>Цена: {{ item.selling_price }}</b></p>
+                        <div class="col-sm-4" id="product_text">
+                            <h2>{{ item.name }}</h2>
+                            <p>{{ item.description }}</p>
+                            <p>Для кого: {{ item.type }}</p>
+                            <p>Тип: {{ item.category }}</p>
+                            <p>Размер: {{ item.size }}</p>
+                            <p><b>Цена: {{ item.selling_price }}</b></p>
+
+                            <form action="/cart_add/{{ item.id }}" method="post">
+                                <button type="submit" class="btn">В корзину</button>
+                            </form>
+                            <br>
+                            <form action="/order/{{ item.id }}" method="post">
+                                <button type="submit" class="btn">Заказать </button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
