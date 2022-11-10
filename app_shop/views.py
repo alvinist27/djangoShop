@@ -25,7 +25,7 @@ def product_list_base_view(request, product_type):
             products = get_products_list(select, product_type)
     else:
         form = ProductCategoryForm()
-        products = Product.objects.filter(type=product_type)[::-1]
+        products = get_products_list('Все товары', product_type)
     paginator = Paginator(products, 12)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
