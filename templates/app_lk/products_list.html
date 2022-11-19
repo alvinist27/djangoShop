@@ -4,6 +4,7 @@
 {% block content %}
     <div id="main">
         <h2>Личный кабинет продавца</h2>
+        <a href="{% url 'seller' %}" id="add_product" class="btn btn-outline-light">Профиль продавца</a>
         <a href="{% url 'lk_create' %}" id="add_product" class="btn btn-outline-light">Добавить товар</a><br>
         <div class="products clearfix">
             {% if clothes|length %}

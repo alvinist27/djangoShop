@@ -2,7 +2,7 @@ from captcha.fields import CaptchaField
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 
-from app_shop.models import User
+from app_shop.models import User, SellerData
 
 GROUP_CHOICES = (
     ('Покупатель', 'Покупатель'),
@@ -39,7 +39,7 @@ class RegistrationForm(UserCreationForm):
         fields = ('group', 'name', 'surname', 'email', 'birth_date', 'password1', 'password2')
 
 
-class AddSellerForm(forms.Form):
+class AddSellerForm(forms.ModelForm):
     type = forms.ChoiceField(choices=ORG_TYPE_CHOICES, label='Тип организации')
     INN = forms.DecimalField(label='ИНН', max_digits=12, decimal_places=0)
     reg_date = forms.DateField(label='Дата регистрации организации')
@@ -49,3 +49,7 @@ class AddSellerForm(forms.Form):
     city = forms.CharField(max_length=50, label='Город')
     street = forms.CharField(max_length=70, label='Улица')
     house_number = forms.CharField(max_length=10, label='Дом')
+
+    class Meta:
+        model = SellerData
+        fields = ['type', 'INN', 'reg_date', 'legal_name', 'email', 'index', 'city', 'street', 'house_number']
