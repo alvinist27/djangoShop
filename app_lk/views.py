@@ -40,12 +40,11 @@ def get_products_view(request):
     paginator = Paginator(products, 12)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
-    return render(request, 'app_lk/products.html', {'clothes': page_obj})
+    return render(request, 'app_lk/products_list.html', {'clothes': page_obj})
 
 
 def update_product_view(request, id):
     product = Product.objects.get(id=id)
-
     if request.method == 'POST':
         form = ProductForm(request.POST, request.FILES)
         if form.is_valid():
@@ -68,9 +67,10 @@ def update_product_view(request, id):
                 file_path = default_storage.save(os.path.join('images', photo.name), photo)
                 Photo.objects.create(file_path=file_path, product=product).save()
     else:
-        form = ProductForm()
-    return render(request, 'app_lk/product.html', {'form': form})
+        form = ProductForm(instance=product)
+    return render(request, 'app_lk/product.html', {'form': form, 'product_id': product.id})
 
 
 def delete_product_view(request, id):
-    return render(request, 'app_lk/products.html')
+    product = Product.objects.get(id=id).delete()
+    return render(request, 'app_lk/products_list.html', {'product': product})

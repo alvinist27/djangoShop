@@ -6,6 +6,9 @@
 {% block content %}
     <div id="main">
         <h2>Введите данные товара</h2>
+        {% if product_id %}
+            <a href="{% url 'lk_delete' product_id %}" id="add_product" class="btn btn-outline-light">Удалить товар</a><br>
+        {% endif %}
         <div class="container">
             <div class="row justify-content-md-center">
                 <div class="col-5">

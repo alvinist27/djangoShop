@@ -1,15 +1,12 @@
 from django import forms
 
-from app_shop.choices import PRODUCT_TYPE_CHOICES, PRODUCT_CATEGORY_CHOICES, PRODUCT_SIZE_CHOICES
+from app_shop.models import Product
 
 
-class ProductForm(forms.Form):
-    name = forms.CharField(max_length=100, label='Название')
-    description = forms.CharField(max_length=300, widget=forms.Textarea(), required=False, label='Описание')
-    type = forms.ChoiceField(choices=PRODUCT_TYPE_CHOICES, label='Тип одежды')
-    category = forms.ChoiceField(choices=PRODUCT_CATEGORY_CHOICES, label='Тип одежды')
-    purchase_price = forms.FloatField(label='Цена закупки')
-    selling_price = forms.FloatField(label='Цена продажи')
-    size = forms.ChoiceField(choices=PRODUCT_SIZE_CHOICES, label='Размер')
-    quantity = forms.IntegerField(label='Количество на складе')
+class ProductForm(forms.ModelForm):
     photos = forms.FileField(widget=forms.ClearableFileInput(attrs={'multiple': True}), label='Фото товара')
+    description = forms.CharField(max_length=300, widget=forms.Textarea(), required=False, label='Описание')
+
+    class Meta:
+        model = Product
+        fields = ('name', 'description', 'type', 'category', 'size', 'purchase_price', 'selling_price', 'quantity')
