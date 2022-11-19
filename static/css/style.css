@@ -403,3 +403,9 @@ button img{
 #product_text {
 	margin: 15px;
 }
+
+#add_product{
+	text-align: center;
+	display: flex;
+  	align-items: center
+}

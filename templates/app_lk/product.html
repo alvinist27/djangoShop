@@ -23,7 +23,7 @@
                             </div>
                         {% endfor %}
                     {% endif %}
-                    <form method="post">
+                    <form method="post" enctype="multipart/form-data">
                         {% csrf_token %}
                         {{ form.name|as_crispy_field }}<br>
                         {{ form.description|as_crispy_field }}<br>
@@ -32,6 +32,7 @@
                         {{ form.purchase_price|as_crispy_field }}<br>
                         {{ form.selling_price|as_crispy_field }}<br>
                         {{ form.size|as_crispy_field }}<br>
+                        {{ form.photos|as_crispy_field }}<br>
                         {{ form.quantity|as_crispy_field }}<br>
                         <div id="sub"><button type="submit" class="btn">Добавить</button></div>
                     </form>

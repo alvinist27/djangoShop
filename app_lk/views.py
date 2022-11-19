@@ -1,31 +1,76 @@
+import os
+
+from django.core.files.storage import default_storage
+from django.core.paginator import Paginator
 from django.shortcuts import render
-from django.views.generic import CreateView
 
 from app_lk.forms import ProductForm
-from app_shop.models import Product
+from app_shop.models import Product, SellerData, User, Photo
 
 
-# def create_products_view(request):
-#     if request.method == 'POST':
-#         # form = ProductForm(request.POST)
-#         # if form.is_valid():
-#         #     Product.objects.create(
-#         #
-#         #     )
-#
-#
-#     else:
-#         form = ProductForm()
-#     return render(request, 'app_lk/add_product.html', {'form': form})
+def create_product_view(request):
+    if request.method == 'POST':
+        form = ProductForm(request.POST, request.FILES)
+        if form.is_valid():
+            seller = SellerData.objects.get(user=User.objects.get(id=request.user.id))
+            product = Product.objects.create(
+                name=form.cleaned_data['name'],
+                description=form.cleaned_data['description'],
+                type=form.cleaned_data['type'],
+                category=form.cleaned_data['category'],
+                purchase_price=form.cleaned_data['purchase_price'],
+                selling_price=form.cleaned_data['selling_price'],
+                size=form.cleaned_data['size'],
+                quantity=form.cleaned_data['quantity'],
+                seller=seller,
+            )
+
+            photos = request.FILES.getlist('photos')
+            for photo in photos:
+                file_path = default_storage.save(os.path.join('images', photo.name), photo)
+                Photo.objects.create(file_path=file_path, product=product).save()
+    else:
+        form = ProductForm()
+    return render(request, 'app_lk/product.html', {'form': form})
 
 
-class MyModelCreateView(CreateView):
-    model = Product
-    form_class = ProductForm
-    template_name = 'app_lk/add_product.html'
+def get_products_view(request):
+    seller = SellerData.objects.get(user_id=request.user.id)
+    products = Product.objects.filter(seller_id=seller.id)
+    paginator = Paginator(products, 12)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    return render(request, 'app_lk/products.html', {'clothes': page_obj})
 
-    # def form_valid(self, form):
-    #     form.='string I want to save'
-    #     #to save a clean string pass it between '' not ""
-    #     form.instance.attr_2='a'
-    #     return super().form_valid(form)
+
+def update_product_view(request, id):
+    product = Product.objects.get(id=id)
+
+    if request.method == 'POST':
+        form = ProductForm(request.POST, request.FILES)
+        if form.is_valid():
+            Product.objects.update_or_create(
+                id=id,
+                defaults={
+                    'name': form.cleaned_data['name'],
+                    'description': form.cleaned_data['description'],
+                    'type': form.cleaned_data['type'],
+                    'category': form.cleaned_data['category'],
+                    'purchase_price': form.cleaned_data['purchase_price'],
+                    'selling_price': form.cleaned_data['selling_price'],
+                    'size': form.cleaned_data['size'],
+                    'quantity': form.cleaned_data['quantity'],
+                },
+            )
+
+            photos = request.FILES.getlist('photos')
+            for photo in photos:
+                file_path = default_storage.save(os.path.join('images', photo.name), photo)
+                Photo.objects.create(file_path=file_path, product=product).save()
+    else:
+        form = ProductForm()
+    return render(request, 'app_lk/product.html', {'form': form})
+
+
+def delete_product_view(request, id):
+    return render(request, 'app_lk/products.html')

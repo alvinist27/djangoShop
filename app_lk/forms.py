@@ -12,3 +12,4 @@ class ProductForm(forms.Form):
     selling_price = forms.FloatField(label='Цена продажи')
     size = forms.ChoiceField(choices=PRODUCT_SIZE_CHOICES, label='Размер')
     quantity = forms.IntegerField(label='Количество на складе')
+    photos = forms.FileField(widget=forms.ClearableFileInput(attrs={'multiple': True}), label='Фото товара')

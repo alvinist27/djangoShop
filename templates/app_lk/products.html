@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    <div id="main">
+        <h2>Личный кабинет продавца</h2>
+        <a href="{% url 'lk_create' %}" id="add_product" class="btn btn-outline-light">Добавить товар</a><br>
+        <div class="products clearfix">
+            {% if clothes|length %}
+            {% for cloth in clothes %}
+                {% if cloth.quantity %}
+                <div class="product-wrapper">
+                    <div class="product">
+                        <a href="{% url 'lk_update' cloth.id %}">
+                            <div class="product-photo">
+                                <img src="/media/{{ cloth.images.first.file_path }}" alt="clothes image">
+                            </div>
+                        </a>
+                        <div class="product-text">
+                            <a href="{% url 'lk_update' cloth.id %}"><h4 id="name" class="cut">{{ cloth.name }}</h4></a>
+                            <h4 id="cost">{{ cloth.selling_price }} ₽</h4>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            {% endfor %}
+            {% else %}
+                <div id="message_not_found">
+                    <h3>Товаров не найдено</h3>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block pagination %}
+    {% if clothes|length %}
+        <div class="pagination" aria-label="Paginate me">
+            <ul class="pagination justify-content-center">
+                {% if clothes.has_previous %}
+                    <a class="page-link label" href="?page={{ clothes.previous_page_number }}
+                        {% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" tabindex="-1">Предыдущая</a>
+                {% else %}
+                    <li class="page-item disabled">
+                        <a class="page-link label disabled" href="#" tabindex="-1">Предыдущая</a>
+                    </li>
+                {% endif %}
+                {% for i in clothes.paginator.page_range %}
+                    {% if i == clothes.number %}
+                        <li class="page-item active"><a class="page-link label" href="?page={{ i }}
+                            {% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">{{ i }}</a></li>
+                    {% else %}
+                        <li class="page-item"><a class="page-link label" href="?page={{ i }}
+                            {% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">{{ i }}</a></li>
+                    {% endif %}
+                {% endfor %}
+                {% if clothes.has_next %}
+                    <a class="page-link label" href="?page={{ clothes.next_page_number }}
+                        {% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">Следующая</a>
+                {% else %}
+                    <li class="page-item disabled">
+                        <a class="page-link label" href="#">Следующая</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    {% endif %}
+{% endblock %}
