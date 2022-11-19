@@ -103,6 +103,7 @@ class Product(models.Model):
     size = models.CharField(max_length=3, verbose_name='Размер', choices=PRODUCT_SIZE_CHOICES)
     selling_price = models.FloatField(verbose_name='Цена продажи')
     quantity = models.IntegerField(verbose_name='Количество на складе')
+    seller = models.ForeignKey(SellerData, on_delete=models.DO_NOTHING, related_name='seller', verbose_name='Продавец')
 
     class Meta:
         verbose_name = 'Товар'
