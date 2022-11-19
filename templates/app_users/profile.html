@@ -5,7 +5,7 @@
 
 {% block content %}
     <div id="main">
-        <h2>Редактировать профиль</h2>
+        <h2>Введите данные пользователя</h2>
         <div class="container">
             <div class="row justify-content-md-center">
                 <div class="col-5">
@@ -25,11 +25,15 @@
                     {% endif %}
                     <form method="post">
                         {% csrf_token %}
-                        {{ form.username|as_crispy_field }}<br>
+                        {{ form.group |as_crispy_field }}<br>
+                        {{ form.name |as_crispy_field }}<br>
+                        {{ form.surname |as_crispy_field }}<br>
                         {{ form.email|as_crispy_field }}<br>
-                        {{ form.first_name|as_crispy_field }}<br>
-                        {{ form.last_name|as_crispy_field }}<br>
-                        <div id="sub"><button type="submit" class="btn">Сохранить</button></div>
+                        {{ form.birth_date|as_crispy_field }}<br>
+                        {{ form.password1|as_crispy_field }}<br>
+                        {{ form.password2|as_crispy_field }}<br>
+                        {{ form.captcha|as_crispy_field }}<br>
+                        <div id="sub"><button type="submit" class="btn">Отправить</button></div>
                     </form>
                 </div>
             </div>

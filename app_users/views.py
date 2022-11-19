@@ -6,24 +6,25 @@ from django.urls import reverse
 from django.utils.decorators import method_decorator
 from django.views import View
 
-from app_shop.models import SellerData, Address, RightAccess
-from app_users.forms import RegistrationForm, AuthForm, AddSellerForm
+from app_shop.models import SellerData, Address, RightAccess, User
+from app_users.forms import ProfileForm, AuthForm, AddSellerForm
 
 
-class RegistrationView(View):
+class ProfileView(View):
     def get(self, request):
-        form = RegistrationForm()
-        return render(request, 'app_users/register.html', {'form': form})
+        user = User.objects.get(id=request.user.id)
+        form = ProfileForm(instance=user) if user else ProfileForm()
+        return render(request, 'app_users/profile.html', {'form': form})
 
     def post(self, request):
-        form = RegistrationForm(request.POST)
+        form = ProfileForm(request.POST)
         if form.is_valid():
             user = form.save()
             login(request, user)
             if form.cleaned_data['group'] == 'Покупатель':
                 return redirect('/')
             return redirect(reverse('seller'))
-        return render(request, 'app_users/register.html', {'form': form})
+        return render(request, 'app_users/profile.html', {'form': form})
 
 
 class AuthView(View):

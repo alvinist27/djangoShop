@@ -24,7 +24,7 @@ class AuthForm(forms.Form):
     captcha = CaptchaField(label='Captcha')
 
 
-class RegistrationForm(UserCreationForm):
+class ProfileForm(UserCreationForm):
     group = forms.ChoiceField(choices=GROUP_CHOICES, label='Зарегистрироваться как')
     name = forms.CharField(max_length=40, label='Имя пользователя')
     surname = forms.CharField(max_length=50, label='Фамилия пользователя')
