@@ -1,6 +1,8 @@
 from django.urls import path
 
-from app_shop.views import MainView, men_products_list_view, women_products_list_view, child_products_list_view, product_view
+from app_shop.views import (
+    MainView, men_products_list_view, women_products_list_view, child_products_list_view, product_view,
+)
 
 
 urlpatterns = [

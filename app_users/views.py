@@ -1,13 +1,13 @@
 from django.contrib.auth import authenticate, login
-from django.contrib.auth.views import LogoutView
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.views import LogoutView
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.utils.decorators import method_decorator
 from django.views import View
 
-from app_users.forms import RegistrationForm, AuthForm, AddSellerForm
 from app_shop.models import SellerData, Address, RightAccess
+from app_users.forms import RegistrationForm, AuthForm, AddSellerForm
 
 
 class RegistrationView(View):

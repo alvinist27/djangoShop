@@ -1,9 +1,10 @@
-from app_shop.models import Product
-from django.views import View
-from django.db.models import Q
-from app_shop.forms import ProductCategoryForm
 from django.core.paginator import Paginator
+from django.db.models import Q
 from django.shortcuts import render
+from django.views import View
+
+from app_shop.forms import ProductCategoryForm
+from app_shop.models import Product
 
 
 class MainView(View):
