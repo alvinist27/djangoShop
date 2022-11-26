@@ -6,7 +6,7 @@
         <h2>Поиск по товарам</h2>
         <div class="products clearfix">
             <div class="col-5" id="search">
-                <form action="{% url 'search_results' %}" method="get" class="form-inline my-2 my-lg-0">
+                <form action="{% url 'search_products' %}" method="get" class="form-inline my-2 my-lg-0">
                     <div class="input-group">
                         <input name="q" class="form-control" type="search" placeholder="Введите запрос" aria-label="Search">
                         <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Поиск</button>
@@ -14,31 +14,22 @@
                 </form>
             </div>
 
-            {% if clothes|length %}
-            {% for cloth in clothes %}
-                {% if cloth.is_available %}
+            {% if products|length %}
+            {% for product in products %}
                 <div class="product-wrapper">
                     <div class="product">
-                        <a href="{% url 'product' cloth.id %}">
+                        <a href="{% url 'product' product.id %}">
                             <div class="product-photo">
-                                <img src="/{{ cloth.images.first.images }}">
+                                <img src="/media/{{ product.images.first.file_path }}" alt="product image">
                             </div>
                         </a>
+
                         <div class="product-text">
-                            <a href="{% url 'product' cloth.id %}">
-                                <h4 id="title" class="cut">{{ cloth.title }}</h4>
-                            </a>
-                            {% if cloth.discount > 0 %}
-                                <h4><span id="discount">{{ cloth.price }} ₽</span> <span id="cost_calc">
-                                    {{ cloth.price|sub:cloth.discount }} ₽</span> </h4>
-                            {% else %}
-                                <h4 id="cost">{{ cloth.price }} ₽</h4>
-                            {% endif %}
-                            <button class="btn cart"><img src="{% static "/img/icon.png" %}"></button>
+                            <a href="{% url 'product' product.id %}"><h4 id="name" class="cut">{{ product.name }}</h4></a>
+                            <h4 id="cost">{{ product.selling_price }} ₽</h4>
                         </div>
                     </div>
                 </div>
-                {% endif %}
             {% endfor %}
             {% else %}
                 <div id="message_not_found">
@@ -50,19 +41,19 @@
 {% endblock %}
 
 {% block pagination %}
-    {% if clothes|length %}
+    {% if products|length %}
         <div class="pagination" aria-label="Paginate me">
             <ul class="pagination justify-content-center">
-                {% if clothes.has_previous %}
-                    <a class="page-link label" href="?page={{ clothes.previous_page_number }}
+                {% if products.has_previous %}
+                    <a class="page-link label" href="?page={{ products.previous_page_number }}
                         {% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" tabindex="-1">Предыдущая</a>
                 {% else %}
                     <li class="page-item disabled">
                         <a class="page-link label disabled" href="#" tabindex="-1">Предыдущая</a>
                     </li>
                 {% endif %}
-                {% for i in clothes.paginator.page_range %}
-                    {% if i == clothes.number %}
+                {% for i in products.paginator.page_range %}
+                    {% if i == products.number %}
                         <li class="page-item active"><a class="page-link label" href="?page={{ i }}
                             {% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">{{ i }}</a></li>
                     {% else %}
@@ -70,8 +61,8 @@
                             {% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">{{ i }}</a></li>
                     {% endif %}
                 {% endfor %}
-                {% if clothes.has_next %}
-                    <a class="page-link label" href="?page={{ clothes.next_page_number }}
+                {% if products.has_next %}
+                    <a class="page-link label" href="?page={{ products.next_page_number }}
                         {% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">Следующая</a>
                 {% else %}
                     <li class="page-item disabled">

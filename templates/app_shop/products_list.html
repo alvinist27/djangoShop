@@ -19,19 +19,19 @@
                 </form>
             </div>
 
-            {% if clothes|length %}
-            {% for cloth in clothes %}
-                {% if cloth.quantity %}
+            {% if products|length %}
+            {% for product in products %}
+                {% if product.quantity %}
                 <div class="product-wrapper">
                     <div class="product">
-                        <a href="{% url 'product' cloth.id %}">
+                        <a href="{% url 'product' product.id %}">
                             <div class="product-photo">
-                                <img src="/media/{{ cloth.images.first.file_path }}" alt="clothes image">
+                                <img src="/media/{{ product.images.first.file_path }}" alt="product image">
                             </div>
                         </a>
                         <div class="product-text">
-                            <a href="{% url 'product' cloth.id %}"><h4 id="name" class="cut">{{ cloth.name }}</h4></a>
-                            <h4 id="cost">{{ cloth.selling_price }} ₽</h4>
+                            <a href="{% url 'product' product.id %}"><h4 id="name" class="cut">{{ product.name }}</h4></a>
+                            <h4 id="cost">{{ product.selling_price }} ₽</h4>
                         </div>
                     </div>
                 </div>
@@ -47,19 +47,19 @@
 {% endblock %}
 
 {% block pagination %}
-    {% if clothes|length %}
+    {% if products|length %}
         <div class="pagination" aria-label="Paginate me">
             <ul class="pagination justify-content-center">
-                {% if clothes.has_previous %}
-                    <a class="page-link label" href="?page={{ clothes.previous_page_number }}
+                {% if products.has_previous %}
+                    <a class="page-link label" href="?page={{ products.previous_page_number }}
                         {% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" tabindex="-1">Предыдущая</a>
                 {% else %}
                     <li class="page-item disabled">
                         <a class="page-link label disabled" href="#" tabindex="-1">Предыдущая</a>
                     </li>
                 {% endif %}
-                {% for i in clothes.paginator.page_range %}
-                    {% if i == clothes.number %}
+                {% for i in products.paginator.page_range %}
+                    {% if i == products.number %}
                         <li class="page-item active"><a class="page-link label" href="?page={{ i }}
                             {% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">{{ i }}</a></li>
                     {% else %}
@@ -67,8 +67,8 @@
                             {% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">{{ i }}</a></li>
                     {% endif %}
                 {% endfor %}
-                {% if clothes.has_next %}
-                    <a class="page-link label" href="?page={{ clothes.next_page_number }}
+                {% if products.has_next %}
+                    <a class="page-link label" href="?page={{ products.next_page_number }}
                         {% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">Следующая</a>
                 {% else %}
                     <li class="page-item disabled">

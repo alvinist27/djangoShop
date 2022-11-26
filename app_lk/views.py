@@ -7,6 +7,8 @@ from django.shortcuts import render
 from app_lk.forms import ProductForm
 from app_shop.models import Product, SellerData, User, Photo
 
+PER_PAGE_RESULTS = 12
+
 
 def create_product_view(request):
     if request.method == 'POST':
@@ -37,7 +39,7 @@ def create_product_view(request):
 def get_products_view(request):
     seller = SellerData.objects.get(user_id=request.user.id)
     products = Product.objects.filter(seller_id=seller.id)
-    paginator = Paginator(products, 12)
+    paginator = Paginator(products, PER_PAGE_RESULTS)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     return render(request, 'app_lk/products_list.html', {'clothes': page_obj})

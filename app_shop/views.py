@@ -7,6 +7,8 @@ from app_shop.cart import Cart
 from app_shop.forms import ProductCategoryForm, CartAddProductForm, OrderForm
 from app_shop.models import Product, ProductOrder
 
+PER_PAGE_RESULTS = 12
+
 
 def main_view(request):
     return render(request, 'app_shop/index.html')
@@ -14,6 +16,15 @@ def main_view(request):
 
 def about_view(request):
     return render(request, 'app_shop/about.html')
+
+
+def search_products(request):
+    query = request.GET.get('q')
+    products = Product.objects.filter(Q(name__icontains=query) | Q(description__icontains=query)) if query else None
+    paginator = Paginator(products, PER_PAGE_RESULTS)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    return render(request, 'app_shop/search.html', {'products': page_obj, 'count': paginator.count})
 
 
 def get_products_list(form_select, product_type):
@@ -32,11 +43,11 @@ def product_list_base_view(request, product_type):
     else:
         form = ProductCategoryForm()
         products = get_products_list('Все товары', product_type)
-    paginator = Paginator(products, 12)
+    paginator = Paginator(products, PER_PAGE_RESULTS)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     return render(
-        request, 'app_shop/products_list.html', {'name': f'{product_type} одежда', 'clothes': page_obj, 'form': form},
+        request, 'app_shop/products_list.html', {'name': f'{product_type} одежда', 'products': page_obj, 'form': form},
     )
 
 
@@ -88,9 +99,9 @@ def order_cart(request):
         form = OrderForm(request.POST)
         if form.is_valid():
             order = form.save()
-            for cloth in cart:
-                ProductOrder.objects.create(order=order, cloth=cloth['clothes'],
-                    price=cloth['total_price'], quantity=cloth['quantity'])
+            for product in cart:
+                ProductOrder.objects.create(order=order, product=product['products'],
+                    price=product['total_price'], quantity=product['quantity'])
             cart.clear()
             return render(request, 'app_shop/cart/created.html', {'order': order})
     else:
