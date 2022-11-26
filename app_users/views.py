@@ -12,7 +12,7 @@ from app_users.forms import ProfileForm, AuthForm, AddSellerForm
 
 class ProfileView(View):
     def get(self, request):
-        user = User.objects.get(id=request.user.id)
+        user = User.objects.filter(id=request.user.id).first()
         form = ProfileForm(instance=user) if user else ProfileForm()
         return render(request, 'app_users/profile.html', {'form': form})
 
