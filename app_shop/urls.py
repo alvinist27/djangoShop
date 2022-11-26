@@ -2,11 +2,12 @@ from django.urls import path
 
 from app_shop.views import (
     main_view, men_products_list_view, women_products_list_view, child_products_list_view, product_view, cart_detail,
-    cart_add, cart_remove, order_cart, order_create,
+    cart_add, cart_remove, order_cart, order_create, about_view,
 )
 
 urlpatterns = [
     path('', main_view, name='main'),
+    path('about/', about_view, name='about'),
     path('cart_detail/', cart_detail, name='cart_detail'),
     path('cart_add/<int:id>', cart_add, name='cart_add'),
     path('cart_remove/<int:id>', cart_remove, name='cart_remove'),

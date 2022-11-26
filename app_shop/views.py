@@ -12,6 +12,10 @@ def main_view(request):
     return render(request, 'app_shop/index.html')
 
 
+def about_view(request):
+    return render(request, 'app_shop/about.html')
+
+
 def get_products_list(form_select, product_type):
     if form_select != 'Все товары':
         return Product.objects.filter(Q(type=product_type) & Q(category=form_select))[::-1]
