@@ -23,5 +23,5 @@ class OrderForm(forms.Form):
     city = forms.CharField(max_length=50, label='Город')
     street = forms.CharField(max_length=70, label='Улица')
     house_number = forms.CharField(max_length=10, label='Дом')
-    apartment_number = forms.IntegerField(label='Номер дома')
+    apartment_number = forms.IntegerField(label='Номер квартиры')
     index = forms.IntegerField(label='Почтовый индекс')

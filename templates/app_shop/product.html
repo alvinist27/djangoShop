@@ -33,11 +33,13 @@
                             <p>Тип: {{ item.category }}</p>
                             <p>Размер: {{ item.size }}</p>
                             <p><b>Цена: {{ item.selling_price }}</b></p>
-
-                            <form action="{% url 'cart_add' item.id %}" method="post">
-                                {% csrf_token %}
-                                <button type="submit" class="btn">В корзину</button>
-                            </form>
+                            <div class="cart col-4">
+                                <form action="{% url "cart_add" item.id %}" method="post">
+                                    {% csrf_token %}
+                                    {{ form|crispy }}<br>
+                                    <button type="submit" class="btn">В корзину</button>
+                                </form>
+                            </div>
                             <br>
                             <form action="{% url 'order_create' item.id %}" method="post">
                                 {% csrf_token %}

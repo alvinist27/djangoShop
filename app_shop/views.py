@@ -50,7 +50,8 @@ def child_products_list_view(request):
 
 def product_view(request, id):
     product = Product.objects.filter(id=id).first()
-    return render(request, 'app_shop/product.html', {'item': product})
+    form = CartAddProductForm()
+    return render(request, 'app_shop/product.html', {'item': product, 'form': form})
 
 
 def cart_detail(request):
@@ -77,7 +78,7 @@ def cart_remove(request, id):
     return redirect('cart_detail')
 
 
-def order_create(request):
+def order_cart(request):
     cart = Cart(request)
     if request.method == 'POST':
         form = OrderForm(request.POST)
@@ -91,3 +92,7 @@ def order_create(request):
     else:
         form = OrderForm()
     return render(request, 'app_shop/cart/create.html', {'cart': cart, 'form': form})
+
+
+def order_create(request, id):
+    return redirect('/')
