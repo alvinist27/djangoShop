@@ -1,15 +1,15 @@
 from django.core.paginator import Paginator
 from django.db.models import Q
-from django.shortcuts import render
-from django.views import View
+from django.shortcuts import render, get_object_or_404, redirect
+from django.views.decorators.http import require_POST
 
-from app_shop.forms import ProductCategoryForm
-from app_shop.models import Product
+from app_shop.cart import Cart
+from app_shop.forms import ProductCategoryForm, CartAddProductForm, OrderForm
+from app_shop.models import Product, ProductOrder
 
 
-class MainView(View):
-    def get(self, request):
-        return render(request, 'app_shop/index.html')
+def main_view(request):
+    return render(request, 'app_shop/index.html')
 
 
 def get_products_list(form_select, product_type):
@@ -21,6 +21,7 @@ def get_products_list(form_select, product_type):
 def product_list_base_view(request, product_type):
     if request.method == 'POST':
         form = ProductCategoryForm(request.POST)
+        products = None
         if form.is_valid():
             select = form.cleaned_data.get('select')
             products = get_products_list(select, product_type)
@@ -50,3 +51,43 @@ def child_products_list_view(request):
 def product_view(request, id):
     product = Product.objects.filter(id=id).first()
     return render(request, 'app_shop/product.html', {'item': product})
+
+
+def cart_detail(request):
+    cart = Cart(request)
+    return render(request, 'app_shop/cart/detail.html', {'cart': cart})
+
+
+@require_POST
+def cart_add(request, id):
+    cart = Cart(request)
+    product = get_object_or_404(Product, id=id)
+    form = CartAddProductForm(request.POST)
+    if form.is_valid():
+        cart.add(product=product, quantity=form.cleaned_data['quantity'], update_quantity=form.cleaned_data['update'])
+    else:
+        cart.add(product=product, quantity=1, update_quantity=False)
+    return redirect('cart_detail')
+
+
+def cart_remove(request, id):
+    cart = Cart(request)
+    product = get_object_or_404(Product, id=id)
+    cart.remove(product)
+    return redirect('cart_detail')
+
+
+def order_create(request):
+    cart = Cart(request)
+    if request.method == 'POST':
+        form = OrderForm(request.POST)
+        if form.is_valid():
+            order = form.save()
+            for cloth in cart:
+                ProductOrder.objects.create(order=order, cloth=cloth['clothes'],
+                    price=cloth['total_price'], quantity=cloth['quantity'])
+            cart.clear()
+            return render(request, 'app_shop/cart/created.html', {'order': order})
+    else:
+        form = OrderForm()
+    return render(request, 'app_shop/cart/create.html', {'cart': cart, 'form': form})

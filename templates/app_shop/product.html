@@ -34,11 +34,13 @@
                             <p>Размер: {{ item.size }}</p>
                             <p><b>Цена: {{ item.selling_price }}</b></p>
 
-                            <form action="/cart_add/{{ item.id }}" method="post">
+                            <form action="{% url 'cart_add' item.id %}" method="post">
+                                {% csrf_token %}
                                 <button type="submit" class="btn">В корзину</button>
                             </form>
                             <br>
-                            <form action="/order/{{ item.id }}" method="post">
+                            <form action="{% url 'order_create' item.id %}" method="post">
+                                {% csrf_token %}
                                 <button type="submit" class="btn">Заказать </button>
                             </form>
                         </div>

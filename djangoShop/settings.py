@@ -75,6 +75,10 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
+
+            'libraries': {
+                'custom_tags': 'templates.template_tags.custom_tags',
+            },
         },
     },
 ]
@@ -147,3 +151,5 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 LOGIN_REDIRECT_URL = '/'
 
 AUTH_USER_MODEL = 'app_shop.User'
+
+CART_SESSION_ID = 'cart'

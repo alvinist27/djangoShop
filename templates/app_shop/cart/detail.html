@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load custom_tags %}
 {% load static %}
 
 {% block title %}
@@ -27,24 +28,22 @@
                             {% for item in cart %}
                                 <tr>
                                     <td>
-                                        <a href="/clothes/{{ item.clothes.id }}">
-                                            <img src="/{{ item.clothes.images.first.images }}" alt="Photo">
+                                        <a href="{% url 'product' item|get_item_id:'products' %}">
+                                            <img src="/media/{{ item|get_item_first_file_path:'products' }}" alt="Photo">
                                         </a>
                                     </td>
-                                    <td>{{ item.clothes.title }}</td>
-                                    <td>{{ item.quantity }}</td>
-                                    <td class="num">{{ item.price }}₽</td>
-                                    <td class="num">{{ item.total_price }}₽</td>
-                                    <td><a href="{% url "cart_remove" item.clothes.id%}">Удалить</a></td>
-
+                                    <td>{{ item|get_item_name:'products' }}</td>
+                                    <td>{{ item|get_item:'quantity' }}</td>
+                                    <td class="num">{{ item|get_item:'price' }}₽</td>
+                                    <td class="num">{{ item|get_item:'total_price' }}₽</td>
+                                    <td><a href="{% url 'cart_remove' item|get_item_id:'products' %}">Удалить</a></td>
                                 </tr>
                             {% endfor %}
-
                             <tr class="total">
                                 <td id="center_text">Итого</td>
-                                <td>Количество</td>
+                                <td>Количество товаров</td>
                                 <td>{{ cart|length }}</td>
-                                <td>Стоимость</td>
+                                <td>Итоговая стоимость</td>
                                 <td class="num">{{ cart.get_total_price }}₽</td>
                             </tr>
                         </tbody>
