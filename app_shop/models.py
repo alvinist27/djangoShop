@@ -32,6 +32,9 @@ class RightAccess(models.Model):
         verbose_name = 'Право доступа'
         verbose_name_plural = 'Права доступа'
 
+    def __str__(self):
+        return self.name
+
 
 class CustomUserManager(BaseUserManager):
     """Custom user model manager where email is the unique auth identifier"""
@@ -77,6 +80,9 @@ class User(AbstractBaseUser, PermissionsMixin):
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'
 
+    def __str__(self):
+        return self.email
+
 
 class SellerData(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name='Пользователь')
@@ -92,6 +98,9 @@ class SellerData(models.Model):
     class Meta:
         verbose_name = 'Данные пользователя'
         verbose_name_plural = 'Данные пользователей'
+
+    def __str__(self):
+        return self.legal_name
 
 
 class Product(models.Model):

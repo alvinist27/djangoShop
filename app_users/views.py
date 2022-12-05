@@ -46,16 +46,19 @@ class AuthView(View):
 
 class AddSellerView(View):
     def get(self, request):
-        seller = SellerData.objects.get(user_id=request.user.id)
-        form = AddSellerForm(
-            initial={
-                'index': seller.legal_address.index,
-                'city': seller.legal_address.city,
-                'street': seller.legal_address.street,
-                'house_number': seller.legal_address.house_number,
-            },
-            instance=seller,
-        )
+        seller = SellerData.objects.filter(user_id=request.user.id).first()
+        if seller:
+            form = AddSellerForm(
+                initial={
+                    'index': seller.legal_address.index,
+                    'city': seller.legal_address.city,
+                    'street': seller.legal_address.street,
+                    'house_number': seller.legal_address.house_number,
+                },
+                instance=seller,
+            )
+        else:
+            form = AddSellerForm()
         return render(request, 'app_users/seller.html', {'form': form})
 
     def post(self, request):
