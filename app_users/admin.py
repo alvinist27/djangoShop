@@ -28,7 +28,7 @@ class StatisticsAdminView(View):
                 order__created__range=(start_date, end_date),
             ).select_related('product').order_by('-quantity')[:5]
 
-            profit_products = ProductOrder.objects.annotate(
+            profit_products = ProductOrder.objects.filter(order__created__range=(start_date, end_date)).annotate(
                 result=F('quantity') * (F('product__selling_price') - F('product__purchase_price')),
             ).order_by('-result')[:5]
 
