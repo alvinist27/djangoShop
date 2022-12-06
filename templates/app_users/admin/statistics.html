@@ -1,0 +1,68 @@
+{% extends "admin/index.html" %}
+{% load crispy_forms_filters %}
+
+{% block sidebar %}
+    {{block.super}}
+    <div>
+        <h1>Статистика товаров</h1>
+        <form action="" method="POST">
+            {% csrf_token %}
+            {{ form|crispy }}<br>
+            <button type="submit" class="btn">Расчитать</button>
+        </form>
+
+        {% if products %}
+            <h2>Рейтинг продаваемых товаров</h2>
+            <table>
+                <tr>
+                    <th>Товар</th>
+                    <th>Цена покупки</th>
+                    <th>Цена продажи</th>
+                    <th>Тип</th>
+                    <th>Категория</th>
+                    <th>Размер</th>
+                    <th>Количество</th>
+                </tr>
+                {% for product in products %}
+                    <tr>
+                        <td><a href="/product/{{ product.product.id }}">{{ product.product.name }}</a></td>
+                        <td>{{ product.product.purchase_price }}</td>
+                        <td>{{ product.product.selling_price }}</td>
+                        <td>{{ product.product.type }}</td>
+                        <td>{{ product.product.category }}</td>
+                        <td>{{ product.product.size }}</td>
+                        <td>{{ product.quantity }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        {% endif %}
+
+        {% if profit_products %}
+            <h2>Рейтинг товаров по прибыли</h2>
+            <table>
+                <tr>
+                    <th>Товар</th>
+                    <th>Цена покупки</th>
+                    <th>Цена продажи</th>
+                    <th>Тип</th>
+                    <th>Категория</th>
+                    <th>Размер</th>
+                    <th>Количество</th>
+                    <th>Рейтинг</th>
+                </tr>
+                {% for product in profit_products %}
+                    <tr>
+                        <td><a href="/product/{{ product.product.id }}">{{ product.product.name }}</a></td>
+                        <td>{{ product.product.purchase_price }}</td>
+                        <td>{{ product.product.selling_price }}</td>
+                        <td>{{ product.product.type }}</td>
+                        <td>{{ product.product.category }}</td>
+                        <td>{{ product.product.size }}</td>
+                        <td>{{ product.quantity }}</td>
+                        <td>{{ product.result }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        {% endif %}
+    </div>
+{% endblock %}

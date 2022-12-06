@@ -25,3 +25,8 @@ class OrderForm(forms.Form):
     house_number = forms.CharField(max_length=10, label='Дом')
     apartment_number = forms.IntegerField(label='Номер квартиры')
     index = forms.IntegerField(label='Почтовый индекс')
+
+
+class DateFilterForm(forms.Form):
+    start_date = forms.DateField(label='Дата начала периода')
+    end_date = forms.DateField(label='Дата конца периода')
