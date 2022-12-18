@@ -124,7 +124,6 @@ class Product(models.Model):
 
 class Order(models.Model):
     buyer = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='buy', verbose_name='Покупатель')
-    seller = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='sell', verbose_name='Продавец')
     address = models.ForeignKey(Address, on_delete=models.CASCADE, related_name='order', verbose_name='Адрес')
     created = models.DateTimeField(auto_now_add=True, verbose_name='Создан')
     status = models.IntegerField(verbose_name='Статус заказа')
@@ -149,6 +148,7 @@ class Comment(models.Model):
 class ProductOrder(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='cloth_order', verbose_name='Заказ')
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='cloth_product', verbose_name='Товар')
+    price = models.FloatField(verbose_name='Цена товара')
     quantity = models.PositiveIntegerField(default=1, verbose_name='Количество')
 
     class Meta:

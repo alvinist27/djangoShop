@@ -18,8 +18,6 @@ class CartAddProductForm(forms.Form):
 
 
 class OrderForm(forms.Form):
-    name = forms.CharField(max_length=40, label='Имя пользователя')
-    surname = forms.CharField(max_length=50, label='Фамилия пользователя')
     city = forms.CharField(max_length=50, label='Город')
     street = forms.CharField(max_length=70, label='Улица')
     house_number = forms.CharField(max_length=10, label='Дом')

@@ -21,3 +21,12 @@ PRODUCT_SIZE_CHOICES = (
     ('XL', 'XL'),
     ('XXL', 'XXL'),
 )
+
+
+class OrderStatus:
+    """Enum for tracking order statuses."""
+
+    created = 0
+    paid = 1
+    confirmed = 2
+    delivered = 3

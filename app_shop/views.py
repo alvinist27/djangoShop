@@ -4,8 +4,9 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.views.decorators.http import require_POST
 
 from app_shop.cart import Cart
+from app_shop.choices import OrderStatus
 from app_shop.forms import ProductCategoryForm, CartAddProductForm, OrderForm
-from app_shop.models import Product, ProductOrder
+from app_shop.models import Product, ProductOrder, Order, Address
 
 PER_PAGE_RESULTS = 12
 
@@ -98,10 +99,25 @@ def order_cart(request):
     if request.method == 'POST':
         form = OrderForm(request.POST)
         if form.is_valid():
-            order = form.save()
+            address = Address.objects.create(
+                index=form.cleaned_data['index'],
+                city=form.cleaned_data['city'],
+                street=form.cleaned_data['street'],
+                house_number=form.cleaned_data['house_number'],
+                apartment_number=form.cleaned_data['apartment_number'],
+            )
+            order = Order.objects.create(
+                buyer=request.user,
+                address=address,
+                status=OrderStatus.created,
+            )
             for product in cart:
-                ProductOrder.objects.create(order=order, product=product['products'],
-                    price=product['total_price'], quantity=product['quantity'])
+                ProductOrder.objects.create(
+                    order=order,
+                    product=product['products'],
+                    price=product['total_price'],
+                    quantity=product['quantity'],
+                )
             cart.clear()
             return render(request, 'app_shop/cart/created.html', {'order': order})
     else:
