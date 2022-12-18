@@ -1,12 +1,14 @@
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LogoutView
+from django.db.models import Q
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.utils.decorators import method_decorator
 from django.views import View
 
-from app_shop.models import SellerData, Address, RightAccess, User
+from app_shop.forms import DateFilterForm
+from app_shop.models import SellerData, Address, RightAccess, User, Order, ProductOrder
 from app_users.forms import ProfileForm, AuthForm, AddSellerForm
 
 
@@ -25,6 +27,30 @@ class ProfileView(View):
                 return redirect('/')
             return redirect(reverse('seller'))
         return render(request, 'app_users/profile.html', {'form': form})
+
+
+class OrderListView(View):
+    def get(self, request):
+        form = DateFilterForm()
+        return render(request, 'app_users/orders.html', {'form': form})
+
+    def post(self, request):
+        orders = None
+        form = DateFilterForm(request.POST)
+        if form.is_valid():
+            start_date = form.cleaned_data['start_date']
+            end_date = form.cleaned_data['end_date']
+            orders = Order.objects.filter(Q(created__range=(start_date, end_date)) & Q(buyer_id=request.user.id))
+        return render(request, 'app_users/orders.html', {'form': form, 'orders': orders})
+
+
+class OrderView(View):
+    def get(self, request, pk):
+        order = Order.objects.get(id=pk)
+        if order.buyer_id != request.user.id:
+            return render(request, 'app_users/error.html')
+        products = ProductOrder.objects.filter(order_id=pk)
+        return render(request, 'app_users/order.html', {'order': order, 'products': products})
 
 
 class AuthView(View):

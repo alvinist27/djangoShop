@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load crispy_forms_filters %}
+{% load static %}
+
+{% block content %}
+    <div id="main">
+        <h2>Заказ № {{ order.id }}</h2>
+        <div class="container">
+            <div class="row justify-content-md-center">
+                <div class="col-12">
+                    <p>Сделан: {{ order.created }}</p>
+                    <p>Статус: {{ order.status }}</p>
+
+                    {% if products %}
+                        <table class="cart-table">
+                            <thead>
+                                <tr>
+                                    <th>Товар</th>
+                                    <th>Цена покупки</th>
+                                    <th>Тип</th>
+                                    <th>Категория</th>
+                                    <th>Размер</th>
+                                    <th>Количество</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for product in products %}
+                                    <tr>
+                                        <td><a href="/product/{{ product.product.id }}">{{ product.product.name }}</a></td>
+                                        <td>{{ product.price }}</td>
+                                        <td>{{ product.product.type }}</td>
+                                        <td>{{ product.product.category }}</td>
+                                        <td>{{ product.product.size }}</td>
+                                        <td>{{ product.quantity }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% endif %}
+                </div>
+            </div>
+        </div><br>
+    </div>
+{% endblock %}
