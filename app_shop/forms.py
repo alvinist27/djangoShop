@@ -1,6 +1,7 @@
 from django import forms
 
 from app_shop.choices import PRODUCT_CATEGORY_CHOICES
+from app_shop.models import Comment
 
 PRODUCT_QUANTITY_CHOICES = [(i, str(i)) for i in range(1, 21)]
 
@@ -28,3 +29,10 @@ class OrderForm(forms.Form):
 class DateFilterForm(forms.Form):
     start_date = forms.DateField(label='Дата начала периода')
     end_date = forms.DateField(label='Дата конца периода')
+
+
+class CommentForm(forms.ModelForm):
+
+    class Meta:
+        model = Comment
+        fields = ('text', 'user_rating')

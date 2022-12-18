@@ -33,6 +33,7 @@
                             <p>Тип: {{ item.category }}</p>
                             <p>Размер: {{ item.size }}</p>
                             <p><b>Цена: {{ item.selling_price }}</b></p>
+                            <p>Оценка: {{ rating }}</p>
                             <div class="cart col-4">
                                 <form action="{% url "cart_add" item.id %}" method="post">
                                     {% csrf_token %}
@@ -50,4 +51,80 @@
                 </div>
             </div>
         </div>
+
+        <div class="reviews">
+            <div class="row justify-content-md-center">
+                <div class="col-6">
+                    {% if comment_form.errors %}
+                        {% for field in comment_form %}
+                            {% for error in field.errors %}
+                                <div class="alert alert-danger">
+                                    <strong>{{ error|escape }}</strong>
+                                </div>
+                            {% endfor %}
+                        {% endfor %}
+                        {% for error in comment_form.non_field_errors %}
+                            <div class="alert alert-danger">
+                                <strong>{{ error|escape }}</strong>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+
+                    {% if user.is_authenticated %}
+                        <h3>Добавьте отзыв:</h3>
+                        <form method="post">
+                            {% csrf_token %}
+                            {{ comment_form.text|as_crispy_field }}<br>
+                            {{ comment_form.user_rating|as_crispy_field }}<br>
+                            <button type="submit" class="btn">Отправить</button>
+                        </form>
+                    {% endif %}
+
+                    {% if comment_list|length %}
+                        <h3>Отзывы:</h3>
+                        {% for comment in comment_list %}
+                            <div class="container">
+                                <p>{{ comment.user }} {{ comment.user_rating }}/5</p>
+                                <p>{{ comment.text }}</p>
+                                <p>{{ comment.created }}</p>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+        </div><br>
+{% endblock %}
+
+{% block pagination %}
+    {% if comment_list|length %}
+        <div class="pagination" aria-label="Paginate me">
+            <ul class="pagination justify-content-center">
+                {% if comment_list.has_previous %}
+                    <a class="page-link label" href="?page={{ comment_list.previous_page_number }}
+                        {% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" tabindex="-1">Предыдущая</a>
+                {% else %}
+                    <li class="page-item disabled">
+                        <a class="page-link label disabled" href="#" tabindex="-1">Предыдущая</a>
+                    </li>
+                {% endif %}
+                {% for i in comment_list.paginator.page_range %}
+                    {% if i == comment_list.number %}
+                        <li class="page-item active"><a class="page-link label" href="?page={{ i }}
+                            {% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">{{ i }}</a></li>
+                    {% else %}
+                        <li class="page-item"><a class="page-link label" href="?page={{ i }}
+                            {% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">{{ i }}</a></li>
+                    {% endif %}
+                {% endfor %}
+                {% if comment_list.has_next %}
+                    <a class="page-link label" href="?page={{ comment_list.next_page_number }}
+                        {% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">Следующая</a>
+                {% else %}
+                    <li class="page-item disabled">
+                        <a class="page-link label" href="#">Следующая</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    {% endif %}
 {% endblock %}

@@ -5,8 +5,8 @@ from django.views.decorators.http import require_POST
 
 from app_shop.cart import Cart
 from app_shop.choices import OrderStatus
-from app_shop.forms import ProductCategoryForm, CartAddProductForm, OrderForm
-from app_shop.models import Product, ProductOrder, Order, Address
+from app_shop.forms import ProductCategoryForm, CartAddProductForm, OrderForm, CommentForm
+from app_shop.models import Product, ProductOrder, Order, Address, Comment
 
 PER_PAGE_RESULTS = 12
 
@@ -65,9 +65,24 @@ def child_products_list_view(request):
 
 
 def product_view(request, id):
+    rating = 'Нет оценок'
     product = Product.objects.filter(id=id).first()
     form = CartAddProductForm()
-    return render(request, 'app_shop/product.html', {'item': product, 'form': form})
+    comment_form = CommentForm()
+    if request.method == 'POST':
+        comment = Comment(user=request.user, product=product)
+        comment_form = CommentForm(request.POST, instance=comment)
+        if comment_form.is_valid():
+            comment_form.save()
+    comment_list = Comment.objects.filter(product=id)
+    if comment_list:
+        rating = round(sum([i[0] for i in list(comment_list.values_list('user_rating'))]) / len(comment_list), 2)
+    paginator = Paginator(comment_list, PER_PAGE_RESULTS)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    return render(request, 'app_shop/product.html', {
+        'item': product, 'form': form, 'comment_form': comment_form, 'comment_list': page_obj, 'rating': rating,
+    })
 
 
 def cart_detail(request):
