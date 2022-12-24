@@ -2,7 +2,7 @@
 
 from django import forms
 
-from app_shop.choices import PRODUCT_CATEGORY_CHOICES
+from app_shop.choices import ProductCategoryChoices
 from app_shop.models import Comment
 
 PRODUCT_QUANTITY_CHOICES = [(i, str(i)) for i in range(1, 21)]
@@ -12,8 +12,8 @@ class ProductCategoryForm(forms.Form):
     """Form for selecting the displayed product category."""
 
     select = forms.CharField(
-        initial=PRODUCT_CATEGORY_CHOICES[0][0],
-        widget=forms.RadioSelect(choices=PRODUCT_CATEGORY_CHOICES),
+        initial=ProductCategoryChoices.ALL,
+        widget=forms.RadioSelect(choices=ProductCategoryChoices.choices),
     )
 
 

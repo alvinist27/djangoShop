@@ -6,7 +6,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.views.decorators.http import require_POST
 
 from app_shop.cart import Cart
-from app_shop.choices import OrderStatus
+from app_shop.choices import OrderStatusChoices
 from app_shop.forms import ProductCategoryForm, CartAddProductForm, OrderForm, CommentForm
 from app_shop.models import Product, ProductOrder, Order, Address, Comment
 
@@ -126,7 +126,7 @@ def order_cart(request):
             order = Order.objects.create(
                 buyer=request.user,
                 address=address,
-                status=OrderStatus.created,
+                status=OrderStatusChoices.CREATED,
             )
             for product in cart:
                 ProductOrder.objects.create(

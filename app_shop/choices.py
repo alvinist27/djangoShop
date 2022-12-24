@@ -1,34 +1,42 @@
 """Module with choices using in forms and models."""
 
-PRODUCT_TYPE_CHOICES = (
-    ('Мужская', 'Мужская'),
-    ('Женская', 'Женская'),
-    ('Детская', 'Детская'),
-)
-
-PRODUCT_CATEGORY_CHOICES = (
-    ('Все товары', 'Все товары'),
-    ('Верхняя одежда', 'Верхняя одежда'),
-    ('Футболки', 'Футболки'),
-    ('Толстовки', 'Толстовки'),
-    ('Штаны', 'Штаны'),
-    ('Аксессуары', 'Аксессуары'),
-)
-
-PRODUCT_SIZE_CHOICES = (
-    ('XS', 'XS'),
-    ('S', 'S'),
-    ('L', 'L'),
-    ('M', 'M'),
-    ('XL', 'XL'),
-    ('XXL', 'XXL'),
-)
+from django.db.models import IntegerChoices, TextChoices
 
 
-class OrderStatus:
-    """Enum for tracking order statuses."""
+class ProductTypeChoices(TextChoices):
+    """Choices for selecting product type."""
 
-    created = 0
-    paid = 1
-    confirmed = 2
-    delivered = 3
+    MEN = 'Мужская'
+    WOMAN = 'Женская'
+    CHILD = 'Детская'
+
+
+class ProductCategoryChoices(TextChoices):
+    """Choices for selecting product category."""
+
+    ALL = 'Все товары'
+    OUTERWEAR = 'Верхняя одежда'
+    SHIRTS = 'Футболки'
+    HOODIES = 'Толстовки'
+    PANTS = 'Штаны'
+    ACCESSORIES = 'Аксессуары'
+
+
+class ProductSizeChoices(TextChoices):
+    """Choices for selecting product size."""
+
+    XS = 'XS'
+    S = 'S'
+    L = 'L'
+    M = 'M'
+    XL = 'XL'
+    XXL = 'XXL'
+
+
+class OrderStatusChoices(IntegerChoices):
+    """Choices for tracking order statuses."""
+
+    CREATED = 0, 'created'
+    PAID = 1, 'paid'
+    CONFIRMED = 2, 'confirmed'
+    DELIVERED = 3, 'delivered'

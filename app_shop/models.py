@@ -6,7 +6,7 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
-from app_shop.choices import PRODUCT_CATEGORY_CHOICES, PRODUCT_SIZE_CHOICES, PRODUCT_TYPE_CHOICES
+from app_shop.choices import OrderStatusChoices, ProductSizeChoices, ProductCategoryChoices, ProductTypeChoices
 
 
 class Address(models.Model):
@@ -16,7 +16,7 @@ class Address(models.Model):
     city = models.CharField(max_length=50, verbose_name='Город')
     street = models.CharField(max_length=70, verbose_name='Улица')
     house_number = models.CharField(max_length=10, verbose_name='Дом')
-    apartment_number = models.IntegerField(null=True, verbose_name='Номер квартиры')
+    apartment_number = models.IntegerField(null=True, blank=True, verbose_name='Номер квартиры')
 
     class Meta:
         """Class with meta information of Address model."""
@@ -83,7 +83,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     name = models.CharField(max_length=40, verbose_name='Имя')
     surname = models.CharField(max_length=50, verbose_name='Фамилия')
-    birth_date = models.DateField(null=True, verbose_name='Дата рождения')
+    birth_date = models.DateField(null=True, blank=True, verbose_name='Дата рождения')
     email = models.EmailField(max_length=50, unique=True, verbose_name='Электронный адрес')
     access = models.ForeignKey(
         RightAccess, on_delete=models.DO_NOTHING, related_name='access', verbose_name='Права', default=3,
@@ -134,8 +134,8 @@ class SellerData(models.Model):
     class Meta:
         """Class with meta information of SellerData model."""
 
-        verbose_name = 'Данные пользователя'
-        verbose_name_plural = 'Данные пользователей'
+        verbose_name = 'Данные продавца'
+        verbose_name_plural = 'Данные продавцов'
 
     def __str__(self) -> str:
         """Return string representation of the SellerData model.
@@ -150,13 +150,13 @@ class Product(models.Model):
     """Model for Product entities."""
 
     name = models.CharField(max_length=100, verbose_name='Название')
-    description = models.CharField(max_length=300, null=True, verbose_name='Описание')
-    type = models.CharField(max_length=15, verbose_name='Тип одежды', choices=PRODUCT_TYPE_CHOICES)
-    category = models.CharField(max_length=50, verbose_name='Категория', choices=PRODUCT_CATEGORY_CHOICES)
+    description = models.TextField(verbose_name='Описание')
+    type = models.CharField(max_length=15, verbose_name='Тип одежды', choices=ProductTypeChoices.choices)
+    category = models.CharField(max_length=50, verbose_name='Категория', choices=ProductCategoryChoices.choices)
     purchase_price = models.FloatField(verbose_name='Цена закупки')
-    size = models.CharField(max_length=3, verbose_name='Размер', choices=PRODUCT_SIZE_CHOICES)
+    size = models.CharField(max_length=3, verbose_name='Размер', choices=ProductSizeChoices.choices)
     selling_price = models.FloatField(verbose_name='Цена продажи')
-    quantity = models.IntegerField(verbose_name='Количество на складе')
+    quantity = models.IntegerField(null=True, blank=True, verbose_name='Количество на складе')
     seller = models.ForeignKey(SellerData, on_delete=models.DO_NOTHING, related_name='seller', verbose_name='Продавец')
 
     class Meta:
@@ -180,7 +180,7 @@ class Order(models.Model):
     buyer = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='buy', verbose_name='Покупатель')
     address = models.ForeignKey(Address, on_delete=models.CASCADE, related_name='order', verbose_name='Адрес')
     created = models.DateTimeField(auto_now_add=True, verbose_name='Создан')
-    status = models.IntegerField(verbose_name='Статус заказа')
+    status = models.IntegerField(verbose_name='Статус заказа', choices=OrderStatusChoices.choices)
 
     class Meta:
         """Class with meta information of Order model."""
@@ -194,7 +194,7 @@ class Comment(models.Model):
 
     user = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='user', verbose_name='Пользователь')
     product = models.ForeignKey(Product, on_delete=models.DO_NOTHING, related_name='product', verbose_name='Товар')
-    text = models.TextField(max_length=300, null=True, verbose_name='Текст отзыва')
+    text = models.TextField(verbose_name='Текст отзыва')
     user_rating = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)], verbose_name='Оценка')
     created = models.DateTimeField(auto_now_add=True, verbose_name='Создан')
 
