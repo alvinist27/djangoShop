@@ -86,7 +86,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     birth_date = models.DateField(null=True, blank=True, verbose_name='Дата рождения')
     email = models.EmailField(max_length=50, unique=True, verbose_name='Электронный адрес')
     access = models.ForeignKey(
-        RightAccess, on_delete=models.DO_NOTHING, related_name='access', verbose_name='Права', default=3,
+        RightAccess, on_delete=models.SET_NULL, null=True, related_name='access', verbose_name='Права', default=3,
     )
     objects = CustomUserManager()
 
@@ -128,7 +128,7 @@ class SellerData(models.Model):
     email = models.EmailField(max_length=50, unique=True, verbose_name='Электронный адрес организации')
     legal_name = models.CharField(max_length=50, verbose_name='Юридическое название')
     legal_address = models.ForeignKey(
-        Address, on_delete=models.CASCADE, related_name='seller', verbose_name='Юридический адрес',
+        Address, on_delete=models.SET_NULL, null=True, related_name='seller', verbose_name='Юридический адрес',
     )
 
     class Meta:
@@ -157,7 +157,7 @@ class Product(models.Model):
     size = models.CharField(max_length=3, verbose_name='Размер', choices=ProductSizeChoices.choices)
     selling_price = models.FloatField(verbose_name='Цена продажи')
     quantity = models.IntegerField(null=True, blank=True, verbose_name='Количество на складе')
-    seller = models.ForeignKey(SellerData, on_delete=models.DO_NOTHING, related_name='seller', verbose_name='Продавец')
+    seller = models.ForeignKey(SellerData, on_delete=models.CASCADE, related_name='seller', verbose_name='Продавец')
 
     class Meta:
         """Class with meta information of Product model."""
@@ -177,10 +177,14 @@ class Product(models.Model):
 class Order(models.Model):
     """Model for Order entities."""
 
-    buyer = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='buy', verbose_name='Покупатель')
-    address = models.ForeignKey(Address, on_delete=models.CASCADE, related_name='order', verbose_name='Адрес')
     created = models.DateTimeField(auto_now_add=True, verbose_name='Создан')
     status = models.IntegerField(verbose_name='Статус заказа', choices=OrderStatusChoices.choices)
+    buyer = models.ForeignKey(
+        User, on_delete=models.SET_NULL, null=True, related_name='buy', verbose_name='Покупатель',
+    )
+    address = models.ForeignKey(
+        Address, on_delete=models.SET_NULL, null=True, related_name='order', verbose_name='Адрес',
+    )
 
     class Meta:
         """Class with meta information of Order model."""
@@ -192,11 +196,13 @@ class Order(models.Model):
 class Comment(models.Model):
     """Model for Comment entities."""
 
-    user = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='user', verbose_name='Пользователь')
-    product = models.ForeignKey(Product, on_delete=models.DO_NOTHING, related_name='product', verbose_name='Товар')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='product', verbose_name='Товар')
     text = models.TextField(verbose_name='Текст отзыва')
     user_rating = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)], verbose_name='Оценка')
     created = models.DateTimeField(auto_now_add=True, verbose_name='Создан')
+    user = models.ForeignKey(
+        User, on_delete=models.SET_NULL, null=True, related_name='user', verbose_name='Пользователь',
+    )
 
     class Meta:
         """Class with meta information of Comment model."""
@@ -209,9 +215,11 @@ class ProductOrder(models.Model):
     """Model for ProductOrder entities."""
 
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='cloth_order', verbose_name='Заказ')
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='cloth_product', verbose_name='Товар')
     price = models.FloatField(verbose_name='Цена товара')
     quantity = models.PositiveIntegerField(default=1, verbose_name='Количество')
+    product = models.ForeignKey(
+        Product, on_delete=models.SET_NULL, null=True, related_name='cloth_product', verbose_name='Товар',
+    )
 
     class Meta:
         """Class with meta information of ProductOrder model."""
