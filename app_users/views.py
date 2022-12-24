@@ -14,47 +14,6 @@ from app_shop.models import SellerData, Address, RightAccess, User, Order, Produ
 from app_users.forms import ProfileForm, AuthForm, AddSellerForm
 
 
-class ProfileView(View):
-    def get(self, request):
-        user = User.objects.filter(id=request.user.id).first()
-        form = ProfileForm(instance=user) if user else ProfileForm()
-        return render(request, 'app_users/profile.html', {'form': form})
-
-    def post(self, request):
-        form = ProfileForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            login(request, user)
-            if form.cleaned_data['group'] == 'Покупатель':
-                return redirect('/')
-            return redirect(reverse('seller'))
-        return render(request, 'app_users/profile.html', {'form': form})
-
-
-class OrderListView(View):
-    def get(self, request):
-        form = DateFilterForm()
-        return render(request, 'app_users/orders.html', {'form': form})
-
-    def post(self, request):
-        orders = None
-        form = DateFilterForm(request.POST)
-        if form.is_valid():
-            start_date = form.cleaned_data['start_date']
-            end_date = form.cleaned_data['end_date']
-            orders = Order.objects.filter(Q(created__range=(start_date, end_date)) & Q(buyer_id=request.user.id))
-        return render(request, 'app_users/orders.html', {'form': form, 'orders': orders})
-
-
-class OrderView(View):
-    def get(self, request, pk):
-        order = Order.objects.get(id=pk)
-        if order.buyer_id != request.user.id:
-            return render(request, 'app_users/error.html')
-        products = ProductOrder.objects.filter(order_id=pk)
-        return render(request, 'app_users/order.html', {'order': order, 'products': products})
-
-
 class AuthView(View):
     def get(self, request):
         form = AuthForm()
@@ -70,6 +29,28 @@ class AuthView(View):
                 login(request, user)
                 return redirect('/')
         return render(request, 'app_users/login.html', {'form': form})
+
+
+@method_decorator(login_required, name='dispatch')
+class LogoutUserView(LogoutView):
+    next_page = '/'
+
+
+class ProfileView(View):
+    def get(self, request):
+        user = User.objects.filter(id=request.user.id).first()
+        form = ProfileForm(instance=user) if user else ProfileForm()
+        return render(request, 'app_users/profile.html', {'form': form})
+
+    def post(self, request):
+        form = ProfileForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            if form.cleaned_data['group'] == 'Покупатель':
+                return redirect('/')
+            return redirect(reverse('seller'))
+        return render(request, 'app_users/profile.html', {'form': form})
 
 
 class AddSellerView(View):
@@ -118,6 +99,25 @@ class AddSellerView(View):
         return render(request, 'app_users/seller.html', {'form': form})
 
 
-@method_decorator(login_required, name='dispatch')
-class LogoutUserView(LogoutView):
-    next_page = '/'
+class OrderListView(View):
+    def get(self, request):
+        form = DateFilterForm()
+        return render(request, 'app_users/orders.html', {'form': form})
+
+    def post(self, request):
+        orders = None
+        form = DateFilterForm(request.POST)
+        if form.is_valid():
+            start_date = form.cleaned_data['start_date']
+            end_date = form.cleaned_data['end_date']
+            orders = Order.objects.filter(Q(created__range=(start_date, end_date)) & Q(buyer_id=request.user.id))
+        return render(request, 'app_users/orders.html', {'form': form, 'orders': orders})
+
+
+class OrderView(View):
+    def get(self, request, pk):
+        order = Order.objects.get(id=pk)
+        if order.buyer_id != request.user.id:
+            return render(request, 'app_users/error.html')
+        products = ProductOrder.objects.filter(order_id=pk)
+        return render(request, 'app_users/order.html', {'order': order, 'products': products})

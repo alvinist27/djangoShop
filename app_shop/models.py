@@ -73,6 +73,7 @@ class CustomUserManager(BaseUserManager):
         """Create and save a SuperUser with the given email and password."""
         admin_access_id = 5
         extra_fields.setdefault('access_id', admin_access_id)
+        extra_fields.setdefault('is_superuser', True)
         if extra_fields.get('access_id') != admin_access_id:
             raise ValueError(_('Superuser must admin access right.'))
         return self.create_user(email, password, **extra_fields)

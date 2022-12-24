@@ -1,9 +1,9 @@
-asgiref==3.5.2
-Django==4.1.2
+asgiref==3.6.0
+Django==4.1.4
 django-crispy-forms==1.14.0
 django-simple-captcha==0.5.17
-Pillow==9.2.0
-psycopg2==2.9.4
+Pillow==9.3.0
+psycopg2==2.9.5
 python-dotenv==0.21.0
 sqlparse==0.4.3
-tzdata==2022.5
+tzdata==2022.7
