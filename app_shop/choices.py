@@ -6,37 +6,37 @@ from django.db.models import IntegerChoices, TextChoices
 class ProductTypeChoices(TextChoices):
     """Choices for selecting product type."""
 
-    MEN = 'Мужская'
-    WOMAN = 'Женская'
-    CHILD = 'Детская'
+    MEN = 'Мужская', 'Мужская'
+    WOMAN = 'Женская', 'Женская'
+    CHILD = 'Детская', 'Детская'
 
 
 class ProductCategoryChoices(TextChoices):
     """Choices for selecting product category."""
 
-    ALL = 'Все товары'
-    OUTERWEAR = 'Верхняя одежда'
-    SHIRTS = 'Футболки'
-    HOODIES = 'Толстовки'
-    PANTS = 'Штаны'
-    ACCESSORIES = 'Аксессуары'
+    ALL = 'Все товары', 'Все товары'
+    OUTERWEAR = 'Верхняя одежда', 'Верхняя одежда'
+    SHIRTS = 'Футболки', 'Футболки'
+    HOODIES = 'Толстовки', 'Толстовки'
+    PANTS = 'Штаны', 'Штаны'
+    ACCESSORIES = 'Аксессуары', 'Аксессуары'
 
 
 class ProductSizeChoices(TextChoices):
     """Choices for selecting product size."""
 
-    XS = 'XS'
-    S = 'S'
-    L = 'L'
-    M = 'M'
-    XL = 'XL'
-    XXL = 'XXL'
+    XS = 'XS', 'XS'
+    S = 'S', 'S'
+    L = 'L', 'L'
+    M = 'M', 'M'
+    XL = 'XL', 'XL'
+    XXL = 'XXL', 'XXL'
 
 
 class OrderStatusChoices(IntegerChoices):
     """Choices for tracking order statuses."""
 
-    CREATED = 0, 'created'
-    PAID = 1, 'paid'
-    CONFIRMED = 2, 'confirmed'
-    DELIVERED = 3, 'delivered'
+    CREATED = 0, 'Создан'
+    PAID = 1, 'Оплачен'
+    CONFIRMED = 2, 'Подтверждён'
+    DELIVERED = 3, 'Доставлен'
