@@ -1,3 +1,5 @@
+"""Module for app_users application routing."""
+
 from django.contrib.auth.decorators import login_required
 from django.urls import path
 

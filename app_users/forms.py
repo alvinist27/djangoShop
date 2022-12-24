@@ -1,3 +1,5 @@
+"""Module with app_users forms."""
+
 from captcha.fields import CaptchaField
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
@@ -19,12 +21,16 @@ ORG_TYPE_CHOICES = (
 
 
 class AuthForm(forms.Form):
+    """Form for user authentication."""
+
     email = forms.CharField(max_length=50, label='Email адрес')
     password = forms.CharField(widget=forms.PasswordInput, label='Пароль')
     captcha = CaptchaField(label='Captcha')
 
 
 class ProfileForm(UserCreationForm):
+    """Form for creating user profile."""
+
     group = forms.ChoiceField(choices=GROUP_CHOICES, label='Зарегистрироваться как')
     name = forms.CharField(max_length=40, label='Имя пользователя')
     surname = forms.CharField(max_length=50, label='Фамилия пользователя')
@@ -35,11 +41,15 @@ class ProfileForm(UserCreationForm):
     captcha = CaptchaField(label='Captcha')
 
     class Meta:
+        """Class with meta information of ProfileForm."""
+
         model = User
         fields = ('group', 'name', 'surname', 'email', 'birth_date', 'password1', 'password2')
 
 
 class AddSellerForm(forms.ModelForm):
+    """Form for creating seller profile."""
+
     type = forms.ChoiceField(choices=ORG_TYPE_CHOICES, label='Тип организации')
     INN = forms.DecimalField(label='ИНН', max_digits=12, decimal_places=0)
     reg_date = forms.DateField(label='Дата регистрации организации')
@@ -51,5 +61,7 @@ class AddSellerForm(forms.ModelForm):
     house_number = forms.CharField(max_length=10, label='Дом')
 
     class Meta:
+        """Class with meta information of AddSellerForm."""
+
         model = SellerData
-        fields = ['type', 'INN', 'reg_date', 'legal_name', 'email', 'index', 'city', 'street', 'house_number']
+        fields = ('type', 'INN', 'reg_date', 'legal_name', 'email', 'index', 'city', 'street', 'house_number')

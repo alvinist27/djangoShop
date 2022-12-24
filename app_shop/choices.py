@@ -1,3 +1,5 @@
+"""Module with choices using in forms and models."""
+
 PRODUCT_TYPE_CHOICES = (
     ('Мужская', 'Мужская'),
     ('Женская', 'Женская'),

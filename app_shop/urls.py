@@ -1,3 +1,5 @@
+"""Module for app_shop application routing."""
+
 from django.urls import path
 
 from app_shop.views import (

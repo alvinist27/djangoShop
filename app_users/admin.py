@@ -1,3 +1,5 @@
+"""Admin module of app_users application."""
+
 from django.contrib.admin import AdminSite
 from django.db.models import F
 from django.shortcuts import render

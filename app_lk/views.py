@@ -1,3 +1,5 @@
+"""Module for app_lk views."""
+
 import os
 
 from django.core.files.storage import default_storage

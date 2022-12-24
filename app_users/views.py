@@ -1,3 +1,5 @@
+"""Module for app_users views."""
+
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LogoutView
