@@ -34,7 +34,6 @@ class AuthView(FormView):
         Returns:
             Response object.
         """
-        super().post(request, *args, **kwargs)
         form = AuthForm(request.POST)
         if form.is_valid():
             email = form.cleaned_data['email']
@@ -176,7 +175,6 @@ class OrderDateFilterView(FormView):
         Returns:
             Response object.
         """
-        super().post(request, *args, **kwargs)
         orders = None
         form = DateFilterForm(request.POST)
         if form.is_valid():

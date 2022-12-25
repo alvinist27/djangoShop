@@ -7,20 +7,30 @@ from django.db.models import F
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
 from django.urls import path
-from django.views import View
+from django.views.generic import FormView
 
 from app_shop.forms import DateFilterForm
 from app_shop.models import Product, Order, ProductOrder
 
 
-class StatisticsAdminView(View):
+class StatisticsAdminView(FormView):
+    """FormView class for getting products statistics by date filters."""
+
     admin_site = None
+    form_class = DateFilterForm
+    template_name = 'app_users/admin/statistics.html'
 
-    def get(self, request: HttpRequest) -> HttpResponse:
-        form = DateFilterForm()
-        return render(request, 'app_users/admin/statistics.html', {'form': form})
+    def post(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
+        """Send a POST request for StatisticsAdminView.
 
-    def post(self, request: HttpRequest) -> HttpResponse:
+        Args:
+            request: current request object;
+            args: arguments for overriding;
+            kwargs: keyword arguments for overriding.
+
+        Returns:
+            Response object.
+        """
         form = DateFilterForm(request.POST)
         products = None
         profit_products = None
@@ -37,7 +47,7 @@ class StatisticsAdminView(View):
                 result=F('quantity') * (F('product__selling_price') - F('product__purchase_price')),
             ).order_by('-result')[:5]
 
-        return render(request, 'app_users/admin/statistics.html', {
+        return render(request, self.template_name, {
             'form': form, 'products': products, 'profit_products': profit_products,
         })
 

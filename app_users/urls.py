@@ -8,7 +8,7 @@ from app_users.views import (
 )
 
 urlpatterns = [
-    path('profile', login_required(UserProfileView.as_view()), name='profile'),
+    path('profile', UserProfileView.as_view(), name='profile'),
     path('orders', OrderDateFilterView.as_view(), name='orders'),
     path('orders/<int:pk>', order_view, name='order'),
     path('seller', login_required(SellerProfileView.as_view()), name='seller'),

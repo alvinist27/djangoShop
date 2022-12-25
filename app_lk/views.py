@@ -42,7 +42,6 @@ class CreateProductView(FormView):
         Returns:
             Response object.
         """
-        super().post(request, *args, **kwargs)
         form = ProductForm(request.POST, request.FILES)
         if form.is_valid():
             seller = SellerData.objects.get(user=User.objects.get(id=request.user.id))
