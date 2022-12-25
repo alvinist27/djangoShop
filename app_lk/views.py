@@ -72,7 +72,9 @@ def get_products_view(request: HttpRequest) -> HttpResponse:
     Returns:
         HttpResponse object.
     """
-    seller = SellerData.objects.get(user_id=request.user.id)
+    seller = SellerData.objects.filter(user_id=request.user.id).first()
+    if not seller:
+        return render(request, 'app_users/error.html')
     products = Product.objects.filter(seller_id=seller.id)
     paginator = Paginator(products, PER_PAGE_RESULTS)
     page_number = request.GET.get('page')

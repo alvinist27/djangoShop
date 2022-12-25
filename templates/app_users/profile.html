@@ -6,8 +6,9 @@
 {% block content %}
     <div id="main">
         <h2>Введите данные пользователя</h2>
-        {% if request.user.is_authentiated %}
+        {% if request.user.is_authenticated %}
             <h3><a href="{% url 'orders' %}">Заказы</a></h3>
+            <h3><a href="{% url 'lk_read' %}">Для продавцов</a></h3>
         {% endif %}
         <div class="container">
             <div class="row justify-content-md-center">
