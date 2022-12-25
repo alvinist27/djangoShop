@@ -14,7 +14,7 @@
             <div class="row justify-content-md-center">
                 <div class="col-5">
                     <p>Итого: {{ cart.get_total_price }}₽</p>
-                    <form action="." method="post" class="order-form">
+                    <form action="" method="post" class="order-form">
                         {% csrf_token %}
                         {{ form|crispy }}
                         <button type="submit" class="btn" id="center_btn">Заказать</button>

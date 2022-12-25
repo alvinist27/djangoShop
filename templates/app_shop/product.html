@@ -42,10 +42,7 @@
                                 </form>
                             </div>
                             <br>
-                            <form action="{% url 'order_product' item.id %}" method="post">
-                                {% csrf_token %}
-                                <button type="submit" class="btn">Заказать</button>
-                            </form>
+                            <button type="submit" class="btn"><a style="text-decoration: none; color: white" href="{% url 'order_product' item.id %}">Заказать</button>
                         </div>
                     </div>
                 </div>

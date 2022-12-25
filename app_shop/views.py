@@ -7,6 +7,7 @@ from django.db.models import Q
 from django.http import HttpResponse, HttpRequest
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.decorators.http import require_POST
+from django.views.generic import FormView
 
 from app_shop.cart import Cart
 from app_shop.choices import OrderStatusChoices
@@ -235,7 +236,7 @@ def order_cart(request: HttpRequest) -> HttpResponse:
                 apartment_number=form.cleaned_data['apartment_number'],
             )
             order = Order.objects.create(
-                buyer=request.user,
+                buyer=request.user if request.user.id else None,
                 address=address,
                 status=OrderStatusChoices.CREATED,
             )
@@ -253,5 +254,45 @@ def order_cart(request: HttpRequest) -> HttpResponse:
     return render(request, 'app_shop/cart/create.html', {'cart': cart, 'form': form})
 
 
-def order_product(request: HttpRequest, id: int) -> HttpResponse:
-    return redirect('/')
+class OrderProductView(FormView):
+    """FormView class for order product with specified id."""
+
+    form_class = OrderForm
+    success_url = '/'
+    template_name = 'app_shop/cart/create.html'
+
+    def post(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
+        """Send a POST request for OrderProductView.
+
+        Args:
+            request: current request object;
+            args: arguments for overriding;
+            kwargs: keyword arguments for overriding.
+
+        Returns:
+            Response object.
+        """
+        form = OrderForm(request.POST)
+        product = Product.objects.get(id=kwargs.get('id'))
+        if form.is_valid():
+            address = Address.objects.create(
+                index=form.cleaned_data['index'],
+                city=form.cleaned_data['city'],
+                street=form.cleaned_data['street'],
+                house_number=form.cleaned_data['house_number'],
+                apartment_number=form.cleaned_data['apartment_number'],
+            )
+            order = Order.objects.create(
+                buyer=request.user if request.user.id else None,
+                address=address,
+                status=OrderStatusChoices.CREATED,
+            )
+
+            ProductOrder.objects.create(
+                order=order,
+                product=product,
+                price=product.selling_price,
+                quantity=1,
+            )
+            return render(request, 'app_shop/cart/created.html', {'order': order})
+        return self.get(request, *args, **kwargs)
