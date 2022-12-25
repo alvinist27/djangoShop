@@ -40,3 +40,20 @@ class OrderStatusChoices(IntegerChoices):
     PAID = 1, 'Оплачен'
     CONFIRMED = 2, 'Подтверждён'
     DELIVERED = 3, 'Доставлен'
+
+
+class UserGroupChoices(TextChoices):
+    """Choices for selecting group of user in registration process."""
+
+    SELLER = 'Продавец', 'Продавец'
+    CUSTOMER = 'Покупатель', 'Покупатель'
+
+
+class OrganizationTypeChoices(TextChoices):
+    """Choices for selecting type of seller organization in registration process."""
+
+    IP = 'ИП', 'ИП'
+    OOO = 'ООО', 'ООО'
+    OAO = 'ОАО', 'ОАО'
+    ZAO = 'ЗАО', 'ЗАО'
+    PAO = 'ПАО', 'ПАО'

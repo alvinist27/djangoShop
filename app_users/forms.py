@@ -5,23 +5,10 @@ from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm
 
+from app_shop.choices import OrganizationTypeChoices, UserGroupChoices
 from app_shop.models import SellerData
 
 User = get_user_model()
-
-
-GROUP_CHOICES = (
-    ('Покупатель', 'Покупатель'),
-    ('Продавец', 'Продавец'),
-)
-
-ORG_TYPE_CHOICES = (
-    ('ИП', 'ИП'),
-    ('ООО', 'ООО'),
-    ('ОАО', 'ОАО'),
-    ('ЗАО', 'ЗАО'),
-    ('ПАО', 'ПАО'),
-)
 
 
 class AuthForm(forms.Form):
@@ -35,7 +22,7 @@ class AuthForm(forms.Form):
 class ProfileForm(UserCreationForm):
     """Form for creating user profile."""
 
-    group = forms.ChoiceField(choices=GROUP_CHOICES, label='Зарегистрироваться как')
+    group = forms.ChoiceField(choices=UserGroupChoices.choices, label='Зарегистрироваться как')
     name = forms.CharField(max_length=40, label='Имя пользователя')
     surname = forms.CharField(max_length=50, label='Фамилия пользователя')
     email = forms.EmailField(label='Email адрес')
@@ -54,7 +41,7 @@ class ProfileForm(UserCreationForm):
 class AddSellerForm(forms.ModelForm):
     """Form for creating seller profile."""
 
-    type = forms.ChoiceField(choices=ORG_TYPE_CHOICES, label='Тип организации')
+    type = forms.ChoiceField(choices=OrganizationTypeChoices.choices, label='Тип организации')
     INN = forms.DecimalField(label='ИНН', max_digits=12, decimal_places=0)
     reg_date = forms.DateField(label='Дата регистрации организации')
     legal_name = forms.CharField(max_length=50, label='Юридическое название')
