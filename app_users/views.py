@@ -1,6 +1,6 @@
 """Module for app_users views."""
 
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LogoutView
 from django.db.models import Q
@@ -10,8 +10,10 @@ from django.utils.decorators import method_decorator
 from django.views import View
 
 from app_shop.forms import DateFilterForm
-from app_shop.models import SellerData, Address, RightAccess, User, Order, ProductOrder
+from app_shop.models import SellerData, Address, RightAccess, Order, ProductOrder
 from app_users.forms import ProfileForm, AuthForm, AddSellerForm
+
+User = get_user_model()
 
 
 class AuthView(View):

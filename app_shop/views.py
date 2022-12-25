@@ -1,7 +1,10 @@
 """Module for app_shop views."""
 
+from typing import List
+
 from django.core.paginator import Paginator
 from django.db.models import Q
+from django.http import HttpResponse, HttpRequest
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.decorators.http import require_POST
 
@@ -13,15 +16,39 @@ from app_shop.models import Product, ProductOrder, Order, Address, Comment
 PER_PAGE_RESULTS = 12
 
 
-def main_view(request):
+def main_view(request: HttpRequest) -> HttpResponse:
+    """Display the main page of the shop.
+
+    Args:
+        request: HttpRequest object.
+
+    Returns:
+        HttpResponse object.
+    """
     return render(request, 'app_shop/index.html')
 
 
-def about_view(request):
+def about_view(request: HttpRequest) -> HttpResponse:
+    """Display page with information about shop.
+
+    Args:
+        request: HttpRequest object.
+
+    Returns:
+        HttpResponse object.
+    """
     return render(request, 'app_shop/about.html')
 
 
-def search_products(request):
+def search_products(request: HttpRequest) -> HttpResponse:
+    """Get products by user's search query.
+
+    Args:
+        request: HttpRequest object.
+
+    Returns:
+        HttpResponse object.
+    """
     query = request.GET.get('q')
     products = Product.objects.filter(Q(name__icontains=query) | Q(description__icontains=query)) if query else None
     paginator = Paginator(products, PER_PAGE_RESULTS)
@@ -30,13 +57,31 @@ def search_products(request):
     return render(request, 'app_shop/search.html', {'products': page_obj, 'count': paginator.count})
 
 
-def get_products_list(form_select, product_type):
+def get_products_list(form_select: str, product_type: str) -> List[Product]:
+    """Get products by category and type.
+
+    Args:
+        form_select: Category of the displayed product list;
+        product_type: Type of the displayed product list.
+
+    Returns:
+        List of products corresponding to category and type.
+    """
     if form_select != 'Все товары':
-        return Product.objects.filter(Q(type=product_type) & Q(category=form_select))[::-1]
-    return Product.objects.filter(type=product_type)[::-1]
+        return Product.objects.filter(Q(type=product_type) & Q(category=form_select)).order_by('-id')
+    return Product.objects.filter(type=product_type).order_by('-id')
 
 
-def product_list_base_view(request, product_type):
+def product_list_base_view(request: HttpRequest, product_type: str) -> HttpResponse:
+    """Base view for getting products list by type.
+
+    Args:
+        request: HttpRequest object.
+        product_type: Type of the displayed product list.
+
+    Returns:
+        HttpResponse object.
+    """
     if request.method == 'POST':
         form = ProductCategoryForm(request.POST)
         products = None
@@ -54,19 +99,52 @@ def product_list_base_view(request, product_type):
     )
 
 
-def men_products_list_view(request):
+def men_products_list_view(request: HttpRequest) -> HttpResponse:
+    """Get list of men's products.
+
+    Args:
+       request: HttpRequest object.
+
+    Returns:
+       HttpResponse object.
+    """
     return product_list_base_view(request, 'Мужская')
 
 
-def women_products_list_view(request):
+def women_products_list_view(request: HttpRequest) -> HttpResponse:
+    """Get list of women's products.
+
+    Args:
+       request: HttpRequest object.
+
+    Returns:
+       HttpResponse object.
+    """
     return product_list_base_view(request, 'Женская')
 
 
-def child_products_list_view(request):
+def child_products_list_view(request: HttpRequest) -> HttpResponse:
+    """Get list of child's products.
+
+    Args:
+       request: HttpRequest object.
+
+    Returns:
+       HttpResponse object.
+    """
     return product_list_base_view(request, 'Детская')
 
 
-def product_view(request, id):
+def product_view(request: HttpRequest, id: int) -> HttpResponse:
+    """Get product by id.
+
+    Args:
+       request: HttpRequest object;
+       id: selected product id.
+
+    Returns:
+       HttpResponse object.
+    """
     rating = 'Нет оценок'
     product = Product.objects.filter(id=id).first()
     form = CartAddProductForm()
@@ -87,13 +165,28 @@ def product_view(request, id):
     })
 
 
-def cart_detail(request):
-    cart = Cart(request)
-    return render(request, 'app_shop/cart/detail.html', {'cart': cart})
+def cart_detail(request: HttpRequest) -> HttpResponse:
+    """Display user's shopping cart.
+
+    Args:
+        request: HttpRequest object.
+
+    Returns:
+        HttpResponse object.
+    """
+    return render(request, 'app_shop/cart/detail.html', {'cart': Cart(request)})
 
 
 @require_POST
-def cart_add(request, id):
+def cart_add(request: HttpRequest, id: int) -> HttpResponse:
+    """Add product to user's shopping cart.
+
+    Args:
+        request: HttpRequest object.
+
+    Returns:
+        HttpResponse object.
+    """
     cart = Cart(request)
     product = get_object_or_404(Product, id=id)
     form = CartAddProductForm(request.POST)
@@ -104,14 +197,30 @@ def cart_add(request, id):
     return redirect('cart_detail')
 
 
-def cart_remove(request, id):
+def cart_remove(request: HttpRequest, id: int) -> HttpResponse:
+    """Remove product from user's shopping cart.
+
+    Args:
+        request: HttpRequest object.
+
+    Returns:
+        HttpResponse object.
+    """
     cart = Cart(request)
     product = get_object_or_404(Product, id=id)
     cart.remove(product)
     return redirect('cart_detail')
 
 
-def order_cart(request):
+def order_cart(request: HttpRequest) -> HttpResponse:
+    """Order products from user's shopping cart.
+
+    Args:
+        request: HttpRequest object.
+
+    Returns:
+        HttpResponse object.
+    """
     cart = Cart(request)
     if request.method == 'POST':
         form = OrderForm(request.POST)
@@ -142,5 +251,5 @@ def order_cart(request):
     return render(request, 'app_shop/cart/create.html', {'cart': cart, 'form': form})
 
 
-def order_create(request, id):
+def order_product(request: HttpRequest, id: int) -> HttpResponse:
     return redirect('/')

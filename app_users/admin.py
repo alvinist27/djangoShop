@@ -1,7 +1,10 @@
 """Admin module of app_users application."""
 
+from typing import List
+
 from django.contrib.admin import AdminSite
 from django.db.models import F
+from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
 from django.urls import path
 from django.views import View
@@ -13,11 +16,11 @@ from app_shop.models import Product, Order, ProductOrder
 class StatisticsAdminView(View):
     admin_site = None
 
-    def get(self, request):
+    def get(self, request: HttpRequest) -> HttpResponse:
         form = DateFilterForm()
         return render(request, 'app_users/admin/statistics.html', {'form': form})
 
-    def post(self, request):
+    def post(self, request: HttpRequest) -> HttpResponse:
         form = DateFilterForm(request.POST)
         products = None
         profit_products = None
@@ -40,10 +43,17 @@ class StatisticsAdminView(View):
 
 
 class CustomAdminSite(AdminSite):
-    site_header = 'Страница администратора магазина'
+    """Custom AdminSite class."""
+
+    site_header = 'Страница администратора'
     site_title = 'Страница администратора магазина'
 
-    def get_urls(self):
+    def get_urls(self) -> List:
+        """Get URLs of additional defined views.
+
+        Returns:
+            URLs to be used in custom admin panel.
+        """
         urls = super().get_urls()
         my_urls = [
             path('products/', self.admin_view((StatisticsAdminView.as_view(admin_site=self))), name='products'),

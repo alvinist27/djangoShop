@@ -2,9 +2,13 @@
 
 from captcha.fields import CaptchaField
 from django import forms
+from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm
 
-from app_shop.models import User, SellerData
+from app_shop.models import SellerData
+
+User = get_user_model()
+
 
 GROUP_CHOICES = (
     ('Покупатель', 'Покупатель'),

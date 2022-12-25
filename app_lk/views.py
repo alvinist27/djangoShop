@@ -2,14 +2,17 @@
 
 import os
 
+from django.contrib.auth import get_user_model
 from django.core.files.storage import default_storage
 from django.core.paginator import Paginator
 from django.shortcuts import render
 
 from app_lk.forms import ProductForm
-from app_shop.models import Product, SellerData, User, Photo
+from app_shop.models import Product, SellerData, Photo
 
 PER_PAGE_RESULTS = 12
+
+User = get_user_model()
 
 
 def create_product_view(request):

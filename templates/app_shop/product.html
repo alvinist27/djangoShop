@@ -42,9 +42,9 @@
                                 </form>
                             </div>
                             <br>
-                            <form action="{% url 'order_create' item.id %}" method="post">
+                            <form action="{% url 'order_product' item.id %}" method="post">
                                 {% csrf_token %}
-                                <button type="submit" class="btn">Заказать </button>
+                                <button type="submit" class="btn">Заказать</button>
                             </form>
                         </div>
                     </div>
