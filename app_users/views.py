@@ -1,13 +1,13 @@
 """Module for app_users views."""
 
 from django.contrib.auth import authenticate, login, get_user_model
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LogoutView
 from django.db.models import Q
+from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse
-from django.utils.decorators import method_decorator
 from django.views import View
+from django.views.generic import FormView
 
 from app_shop.forms import DateFilterForm
 from app_shop.models import SellerData, Address, RightAccess, Order, ProductOrder
@@ -16,12 +16,25 @@ from app_users.forms import ProfileForm, AuthForm, AddSellerForm
 User = get_user_model()
 
 
-class AuthView(View):
-    def get(self, request):
-        form = AuthForm()
-        return render(request, 'app_users/login.html', {'form': form})
+class AuthView(FormView):
+    """FormView class for user authentication."""
 
-    def post(self, request):
+    form_class = AuthForm
+    success_url = '/'
+    template_name = 'app_users/login.html'
+
+    def post(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
+        """Send a POST request for AuthView.
+
+        Args:
+            request: current request object;
+            args: arguments for overriding;
+            kwargs: keyword arguments for overriding.
+
+        Returns:
+            Response object.
+        """
+        super().post(request, *args, **kwargs)
         form = AuthForm(request.POST)
         if form.is_valid():
             email = form.cleaned_data['email']
@@ -30,21 +43,40 @@ class AuthView(View):
             if user:
                 login(request, user)
                 return redirect('/')
-        return render(request, 'app_users/login.html', {'form': form})
+        return self.get(request, *args, **kwargs)
 
 
-@method_decorator(login_required, name='dispatch')
 class LogoutUserView(LogoutView):
+    """LogoutView class for user logout."""
+
     next_page = '/'
 
 
-class ProfileView(View):
-    def get(self, request):
+class UserProfileView(View):
+    """View class for user profile."""
+
+    def get(self, request: HttpRequest) -> HttpResponse:
+        """Send a GET request for ProfileView.
+
+        Args:
+            request: current request object.
+
+        Returns:
+            Response object.
+        """
         user = User.objects.filter(id=request.user.id).first()
         form = ProfileForm(instance=user) if user else ProfileForm()
         return render(request, 'app_users/profile.html', {'form': form})
 
-    def post(self, request):
+    def post(self, request: HttpRequest) -> HttpResponse:
+        """Send a POST request for ProfileView.
+
+        Args:
+            request: current request object.
+
+        Returns:
+            Response object.
+        """
         form = ProfileForm(request.POST)
         if form.is_valid():
             user = form.save()
@@ -55,8 +87,18 @@ class ProfileView(View):
         return render(request, 'app_users/profile.html', {'form': form})
 
 
-class AddSellerView(View):
-    def get(self, request):
+class SellerProfileView(View):
+    """View class for seller's profile."""
+
+    def get(self, request: HttpRequest) -> HttpResponse:
+        """Send a GET request for AddSellerView.
+
+        Args:
+            request: current request object.
+
+        Returns:
+            Response object.
+        """
         seller = SellerData.objects.filter(user_id=request.user.id).first()
         if seller:
             form = AddSellerForm(
@@ -72,7 +114,15 @@ class AddSellerView(View):
             form = AddSellerForm()
         return render(request, 'app_users/seller.html', {'form': form})
 
-    def post(self, request):
+    def post(self, request: HttpRequest) -> HttpResponse:
+        """Send a POST request for AddSellerView.
+
+        Args:
+            request: current request object.
+
+        Returns:
+            Response object.
+        """
         form = AddSellerForm(request.POST)
         if form.is_valid():
             address = Address.objects.create(
@@ -101,25 +151,53 @@ class AddSellerView(View):
         return render(request, 'app_users/seller.html', {'form': form})
 
 
-class OrderListView(View):
-    def get(self, request):
-        form = DateFilterForm()
-        return render(request, 'app_users/orders.html', {'form': form})
+class OrderDateFilterView(FormView):
+    """FormView class for getting user's orders by date filters."""
 
-    def post(self, request):
+    form_class = DateFilterForm
+    template_name = 'app_users/orders.html'
+
+    def get_success_url(self) -> str:
+        """Get success url of sending form to the same view.
+
+        Returns:
+            url path to follow after submitting the form.
+        """
+        return self.request.path
+
+    def post(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
+        """Send a POST request for OrderDateFilterView.
+
+        Args:
+            request: current request object;
+            args: arguments for overriding;
+            kwargs: keyword arguments for overriding.
+
+        Returns:
+            Response object.
+        """
+        super().post(request, *args, **kwargs)
         orders = None
         form = DateFilterForm(request.POST)
         if form.is_valid():
             start_date = form.cleaned_data['start_date']
             end_date = form.cleaned_data['end_date']
             orders = Order.objects.filter(Q(created__range=(start_date, end_date)) & Q(buyer_id=request.user.id))
-        return render(request, 'app_users/orders.html', {'form': form, 'orders': orders})
+        return render(request, self.template_name, {'form': form, 'orders': orders})
 
 
-class OrderView(View):
-    def get(self, request, pk):
-        order = Order.objects.get(id=pk)
-        if order.buyer_id != request.user.id:
-            return render(request, 'app_users/error.html')
-        products = ProductOrder.objects.filter(order_id=pk)
-        return render(request, 'app_users/order.html', {'order': order, 'products': products})
+def order_view(request: HttpRequest, pk: int) -> HttpResponse:
+    """Get user's order by specified id.
+
+    Args:
+        request: HttpRequest object;
+        pk: id of order to be displayed.
+
+    Returns:
+        HttpResponse object.
+    """
+    order = Order.objects.get(id=pk)
+    if order.buyer_id != request.user.id:
+        return render(request, 'app_users/error.html')
+    products = ProductOrder.objects.filter(order_id=pk)
+    return render(request, 'app_users/order.html', {'order': order, 'products': products})

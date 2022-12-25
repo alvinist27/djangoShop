@@ -3,13 +3,15 @@
 from django.contrib.auth.decorators import login_required
 from django.urls import path
 
-from app_users.views import AddSellerView, AuthView, LogoutUserView, OrderView, OrderListView, ProfileView
+from app_users.views import (
+    SellerProfileView, AuthView, LogoutUserView, OrderDateFilterView, UserProfileView, order_view,
+)
 
 urlpatterns = [
-    path('profile', ProfileView.as_view(), name='profile'),
-    path('orders', OrderListView.as_view(), name='orders'),
-    path('orders/<int:pk>', OrderView.as_view(), name='order'),
-    path('seller', login_required(AddSellerView.as_view()), name='seller'),
+    path('profile', login_required(UserProfileView.as_view()), name='profile'),
+    path('orders', OrderDateFilterView.as_view(), name='orders'),
+    path('orders/<int:pk>', order_view, name='order'),
+    path('seller', login_required(SellerProfileView.as_view()), name='seller'),
     path('login', AuthView.as_view(), name='login'),
-    path('logout', LogoutUserView.as_view(), name='logout'),
+    path('logout', login_required(LogoutUserView.as_view()), name='logout'),
 ]

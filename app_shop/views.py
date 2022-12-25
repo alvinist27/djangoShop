@@ -182,7 +182,8 @@ def cart_add(request: HttpRequest, id: int) -> HttpResponse:
     """Add product to user's shopping cart.
 
     Args:
-        request: HttpRequest object.
+        request: HttpRequest object;
+        id: id of product to be added to cart.
 
     Returns:
         HttpResponse object.
@@ -201,7 +202,8 @@ def cart_remove(request: HttpRequest, id: int) -> HttpResponse:
     """Remove product from user's shopping cart.
 
     Args:
-        request: HttpRequest object.
+        request: HttpRequest object;
+        id: id of product to be removed from cart.
 
     Returns:
         HttpResponse object.
