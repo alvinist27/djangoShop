@@ -1,0 +1,26 @@
+[tool.poetry]
+name = "djangoshop"
+version = "0.1.0"
+description = ""
+authors = ["alvinist27 <suhrobhotamov496@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+asgiref = "3.6.0"
+django = "4.1.4"
+django-crispy-forms = "1.14.0"
+django-simple-captcha = "0.5.17"
+pillow = "9.3.0"
+psycopg2 = "2.9.5"
+python-dotenv = "0.21.0"
+sqlparse = "0.4.3"
+tzdata = "2022.7"
+
+[tool.poetry.group.dev.dependencies]
+mypy = "^0.991"
+flake8 = "^6.0.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

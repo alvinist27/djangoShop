@@ -209,4 +209,6 @@ ENV/
 # mkdocs documentation
 /site
 
+.mypy_cache
+
 # End of file
