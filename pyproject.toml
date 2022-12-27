@@ -16,6 +16,7 @@ psycopg2 = "2.9.5"
 python-dotenv = "0.21.0"
 sqlparse = "0.4.3"
 tzdata = "2022.7"
+djangorestframework = "3.14.0"
 
 [tool.poetry.group.dev.dependencies]
 mypy = "^0.991"

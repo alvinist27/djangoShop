@@ -2,6 +2,7 @@ asgiref==3.6.0
 Django==4.1.4
 django-crispy-forms==1.14.0
 django-simple-captcha==0.5.17
+djangorestframework==3.14.0
 Pillow==9.3.0
 psycopg2==2.9.5
 python-dotenv==0.21.0

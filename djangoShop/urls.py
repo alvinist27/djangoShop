@@ -10,6 +10,7 @@ from app_users.admin import admin_site
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('statistics/', admin_site.urls),
+    path('api/', include('api.urls')),
     path('', include('app_shop.urls')),
     path('lk/', include('app_lk.urls')),
     path('users/', include('app_users.urls')),
