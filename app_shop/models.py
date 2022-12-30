@@ -193,6 +193,14 @@ class Order(models.Model):
         verbose_name = 'Заказ'
         verbose_name_plural = 'Заказы'
 
+    def __str__(self) -> str:
+        """Return string representation of the Order model.
+
+        Returns:
+            Number of the Order object.
+        """
+        return f'Заказ № {self.id}'
+
 
 class Comment(models.Model):
     """Model for Comment entities."""
