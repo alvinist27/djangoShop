@@ -32,6 +32,11 @@
                         <div class="product-text">
                             <a href="{% url 'product' product.id %}"><h4 id="name" class="cut">{{ product.name }}</h4></a>
                             <h4 id="cost">{{ product.selling_price }} ₽</h4>
+
+                            <form action="{% url 'cart_add' product.id %}" method="post">
+                                {% csrf_token %}
+                                <button type="submit" class="btn cart"><img src="{% static "/img/icon.png" %}"></button>
+                            </form>
                         </div>
                     </div>
                 </div>
