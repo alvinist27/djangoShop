@@ -1,10 +1,12 @@
 {% extends 'base.html' %}
+{% load cache %}
 {% load static %}
 
 {% block content %}
     <div id="main">
         <h2>{{ name }}</h2>
         <div class="products clearfix">
+        {% cache 600 products %}
             <div class="filters">
                 <form method="post">
                     {% csrf_token %}
@@ -35,7 +37,9 @@
 
                             <form action="{% url 'cart_add' product.id %}" method="post">
                                 {% csrf_token %}
-                                <button type="submit" class="btn cart"><img src="{% static "/img/icon.png" %}"></button>
+                                <button type="submit" class="btn cart">
+                                    <img src="{% static "/img/icon.png" %}" alt="logo">
+                                </button>
                             </form>
                         </div>
                     </div>
@@ -47,6 +51,7 @@
                     <h3>Товаров не найдено</h3>
                 </div>
             {% endif %}
+        {% endcache %}
         </div>
     </div>
 {% endblock %}
