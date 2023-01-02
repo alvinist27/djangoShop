@@ -10,6 +10,7 @@ RUN pip install poetry
 RUN poetry install --no-dev
 
 COPY . /usr/src/dj_shop
+RUN chmod +x /usr/src/dj_shop/docker-entrypoint.sh
 
 EXPOSE 8000
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+ENTRYPOINT ["/usr/src/dj_shop/docker-entrypoint.sh"]
