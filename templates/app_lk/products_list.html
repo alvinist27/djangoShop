@@ -8,7 +8,6 @@
         <a href="{% url 'seller' %}" id="add_product" class="btn btn-outline-light">Профиль продавца</a>
         <a href="{% url 'lk_create' %}" id="add_product" class="btn btn-outline-light">Добавить товар</a><br>
         <div class="products clearfix">
-        {% cache 600 lk_products %}
             {% if clothes|length %}
             {% for cloth in clothes %}
                 {% if cloth.quantity %}
@@ -32,7 +31,6 @@
                     <h3>Товаров не найдено</h3>
                 </div>
             {% endif %}
-        {% endcache %}
         </div>
     </div>
 {% endblock %}

@@ -6,7 +6,6 @@ from django.core.paginator import Paginator
 from django.db.models import Q
 from django.http import HttpResponse, HttpRequest
 from django.shortcuts import render, get_object_or_404, redirect
-from django.views.decorators.cache import cache_page
 from django.views.decorators.http import require_POST
 from django.views.generic import FormView
 
@@ -18,7 +17,6 @@ from app_shop.models import Product, ProductOrder, Order, Address, Comment
 PER_PAGE_RESULTS = 12
 
 
-@cache_page(60 * 10)
 def main_view(request: HttpRequest) -> HttpResponse:
     """Display the main page of the shop.
 

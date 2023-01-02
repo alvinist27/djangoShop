@@ -1,5 +1,4 @@
 {% extends 'base.html' %}
-{% load cache %}
 {% load crispy_forms_filters %}
 {% load static %}
 
@@ -27,7 +26,6 @@
                             </a>
                         </div>
 
-                        {% cache 600 product %}
                         <div class="col-sm-4" id="product_text">
                             <h2>{{ item.name }}</h2>
                             <p>{{ item.description }}</p>
@@ -50,7 +48,6 @@
                                 </a>
                             </button>
                         </div>
-                        {% endcache %}
                     </div>
                 </div>
             </div>
