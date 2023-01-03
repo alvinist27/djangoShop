@@ -12,5 +12,4 @@ RUN poetry install --no-dev
 COPY . /usr/src/dj_shop
 RUN chmod +x /usr/src/dj_shop/docker-entrypoint.sh
 
-EXPOSE 8000
 ENTRYPOINT ["/usr/src/dj_shop/docker-entrypoint.sh"]
