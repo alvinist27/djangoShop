@@ -11,6 +11,7 @@ from django.views.generic import FormView
 
 from app_shop.forms import DateFilterForm
 from app_shop.models import Product, Order, ProductOrder
+from app_users.tasks import send_mail_notification
 
 
 class StatisticsAdminView(FormView):
@@ -52,6 +53,19 @@ class StatisticsAdminView(FormView):
         })
 
 
+def send_mail_to_all(request) -> HttpResponse:
+    """Send Email notification to registered users.
+
+    Args:
+        request: current request object.
+
+    Returns:
+        Response object.
+    """
+    send_mail_notification.delay()
+    return HttpResponse('Уведомления отправлены на адреса электронной почты покупателей')
+
+
 class CustomAdminSite(AdminSite):
     """Custom AdminSite class."""
 
@@ -67,6 +81,7 @@ class CustomAdminSite(AdminSite):
         urls = super().get_urls()
         my_urls = [
             path('products/', self.admin_view((StatisticsAdminView.as_view(admin_site=self))), name='products'),
+            path('send_notifications/', self.admin_view(send_mail_to_all), name='products'),
         ]
 
         return my_urls + urls

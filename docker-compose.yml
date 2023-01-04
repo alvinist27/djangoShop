@@ -7,6 +7,20 @@ services:
     env_file:
       - .env
 
+  rabbitmq:
+    image: rabbitmq:latest
+    env_file:
+      - .env
+    ports:
+      - "5672:5672"
+    expose:
+      - 5672
+
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+
   web:
     build:
       context: .
@@ -22,3 +36,16 @@ services:
       - POSTGRES_DB_HOST=${DOCKER_POSTGRES_DB_HOST}
     depends_on:
       - db
+
+  celery-worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: celery -A djangoShop worker --loglevel=info
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_DB_HOST=${DOCKER_POSTGRES_DB_HOST}
+    depends_on:
+      - db
+      - rabbitmq
