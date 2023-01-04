@@ -32,7 +32,7 @@ services:
     env_file:
       - .env
     environment:
-      - POSTGRES_DB_HOST=${DOCKER_POSTGRES_DB_HOST}
+      - POSTGRES_HOST=${DOCKER_POSTGRES_DB_HOST}
     depends_on:
       - db
 
@@ -44,7 +44,7 @@ services:
     env_file:
       - .env
     environment:
-      - POSTGRES_DB_HOST=${DOCKER_POSTGRES_DB_HOST}
+      - POSTGRES_HOST=${DOCKER_POSTGRES_DB_HOST}
     depends_on:
       - db
       - rabbitmq
